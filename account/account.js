@@ -13,12 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const accountInfoDiv = document.getElementById('accountInfo');
 
     const hidden = document.getElementById('about');
-    const showbtn = document.getElementById('aboutHvr');
-
-    showbtn.addEventListener('mouseover', () => {
+    
+    googleLinkBtn.addEventListener('mouseover', () => {
         hidden.style.display = 'block';
     });
-    showbtn.addEventListener('mouseout', () => {
+    googleLinkBtn.addEventListener('mouseout', () => {
         hidden.style.display = 'none';
     });
 
