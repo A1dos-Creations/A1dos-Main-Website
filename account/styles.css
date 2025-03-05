@@ -35,7 +35,7 @@ input:hover{
     margin-right: auto;
 }
 #registerDiv{
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-self: center;
     gap: 10px;

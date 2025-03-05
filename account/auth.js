@@ -14,6 +14,10 @@ function showMessage(msg, color = 'black') {
     }
 }
 
+const showRegister = document.getElementById('shwRgstr');
+const registerDiv = document.getElementById('registerDiv');
+showRegister.addEventListener('click', () => {registerDiv.style.display = 'flex';});
+
 async function loginUser() {
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value.trim();
