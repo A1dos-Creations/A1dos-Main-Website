@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     } else {
         accountInfoDiv.innerHTML = "<p>User data not available. Please log in.</p>";
+        window.location.href = "./auth";
     }
 
     const urlParams = new URLSearchParams(window.location.search);
