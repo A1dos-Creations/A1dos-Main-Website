@@ -2,7 +2,6 @@ const apiBaseUrl = 'https://a1dos-login.onrender.com';
 
 const button = document.getElementById('login-button');
 
-// Function to show messages
 function showMessage(msg, color = 'black') {
     const message = document.getElementById('message');
     message.textContent = msg;
@@ -12,6 +11,13 @@ function showMessage(msg, color = 'black') {
     } else {
         message.style.display = 'block';
     }
+}
+
+const user = JSON.parse(localStorage.getItem("user") || "{}");
+if(user || user.email){
+    const logoutBtn = document.getElementById('logout').style.display = 'none';
+} else {
+    window.location.href = "account";
 }
 
 const showRegister = document.getElementById('shwRgstr');

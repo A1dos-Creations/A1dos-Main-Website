@@ -129,8 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function logoutUser() {
         localStorage.removeItem("authToken");
         localStorage.removeItem("user");
-        localStorage.removeItem("googleLinked");
-    
+        localStorage.removeItem("googleLinked");    
         window.location.href = "auth"; 
     }
 
