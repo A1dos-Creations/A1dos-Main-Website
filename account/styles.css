@@ -291,11 +291,24 @@ button:hover{
     color: white;
     margin-left: 50px;
     margin-top: 20px;
-    border-style: none;
+    border-style: solid;
     margin-top: -0px;
     margin-bottom: 10px;
     margin-left: 25px;
     width: 80px;
+    padding: 0px 30px;
+    border-color: white;
+    justify-content: center;
+    margin-top: 20px;
+    margin-left: 50px;
+    border-radius: 8px;
+    width: max-content;
+    height: 125px;
+}
+.notification-settings p{
+    margin-top: 5px;
+    font-size: 30px;
+    font-weight: bolder;
 }
 
 .switch {
