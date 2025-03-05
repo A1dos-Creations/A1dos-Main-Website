@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const accountInfoDiv = document.getElementById('accountInfo');
 
     const hidden = document.getElementById('about');
-    
+
     googleLinkBtn.addEventListener('mouseover', () => {
         hidden.style.display = 'block';
     });
@@ -118,6 +118,21 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(err => console.error("Error unlinking Google:", err));
     }
     
+    const logoutBtn = document.getElementById("logout-btn");
+    
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            logoutUser();
+        });
+    }
+    
+    function logoutUser() {
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("user");
+        localStorage.removeItem("googleLinked");
+    
+        window.location.href = "/auth.html"; 
+    }
 
     updateGoogleButton();
 });
