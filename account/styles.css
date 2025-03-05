@@ -111,6 +111,7 @@ button:hover{
     text-indent: 20px;
     font-size: 45px;
     font-weight: 900;
+    text-decoration: underline;
 }
 .header2{
     font-family: Lexend Deca;
@@ -194,4 +195,38 @@ button:hover{
     color: white;
     font-size: 15px;
     margin-left: 50px;
+    margin-bottom: 40px;
+}
+#infoIcon{
+    height: 19px;
+    width: auto;
+    margin-top: 10px;
+}
+.header3{
+    font-family: Lexend Deca;
+    color: white;
+    margin-top: -30px;
+    margin-left: 25px;
+}
+#parg10351781{
+    font-family: Lexend Deca;
+    color: white;
+    font-size: 13px;
+    margin-left: 40px;
+    margin-top: -20px;
+    opacity: 0.3;
+    font-style: italic;
+}
+#i51703n295b{
+    background-color: rgba(255, 239, 98, 0.219);
+    padding: 5px 15px;
+}
+#av571v3{
+    border-style: solid;
+    border-color: white;
+    width: 600px;
+    margin-left: 50px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    border-radius: 5px;
 }
