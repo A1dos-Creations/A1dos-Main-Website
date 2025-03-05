@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca');
+
+#LoginH{
+    text-align: center;
+    font-size: 40px;
+    font-family: "Lexend Deca", sans-serif;
+    margin-top: 100px;
+}
+#RegisterH{
+    font-size: 40px;
+    font-family: "Lexend Deca", sans-serif;
+}
+input{
+    font-family: "Lexend Deca", sans-serif;
+    max-height: 25px;
+    min-height: 15px;
+    height: 20px;
+    width: 200px;
+    border-radius: 8px;
+    border-color: rgb(175, 175, 175);
+    border-style: solid;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+}
+input:hover{
+    border-color: rgb(116, 116, 116);
+}
+#loginDiv{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 750px;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+#registerDiv{
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    gap: 10px;
+    width: 750px;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+body{
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+button{
+    font-family: "Lexend Deca", sans-serif;
+    height: 30px;
+    width: 100px;
+    outline: none;
+    border-color: rgb(168, 168, 168);
+    border-radius: 8px;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    border-style: solid;
+}
+button:hover{
+    background-color: #bbe0a9;
+}
+
+#logout{
+    font-family: "Lexend Deca", sans-serif;
+    height: 30px;
+    width: 100px;
+    outline: none;
+    border-color: rgb(168, 168, 168);
+    border-style: solid;
+    border-radius: 8px;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    margin-top: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction:column-reverse;
+    font-size: 15px;
+    text-align: center;
+}
+#logout:hover{
+    background-color: #f0b7a4;
+    border-color: rgb(160, 62, 45);
+}
+
+#message{
+    font-family: "Lexend Deca", sans-serif;
+    font-size: 15px;
+    margin-top: 20px;
+    max-width: 200px;
+    justify-self: center;
+    text-align: center;
+    padding: 15px;
+    background-color: #f0b7a4;
+    border-radius: 8px;
+    border-style: solid;
+    border-color: rgb(160, 62, 45);
+    display: none;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ACCOUNT MANAGEMENT */
+.header1{
+    font-family: Lexend Deca;
+    color: white;
+    text-indent: 20px;
+    font-size: 45px;
+    font-weight: 900;
+}
+.header2{
+    font-family: Lexend Deca;
+    color: white;
+    text-indent: 50px;
+    font-size: 30px;
+    font-weight: 900;
+}
+.link{
+    font-family: Lexend Deca;
+    color: rgb(0, 0, 0);
+    width: 220px;
+    font-size: 16px;
+    margin-left: 30px;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    border-radius: 3px;
+}
+.link p{
+    margin-top: 1px;
+    margin-left: -30px;
+}
+#aboutHvr{
+    background-color: transparent;
+    color: white;
+    border-style: none;
+    width: 20px;
+    margin-bottom: 20px;
+    margin-top: -26px;
+    margin-left: 260px;
+    position: absolute;
+    text-align: center;
+    font-family: Lexend Deca;
+}
+#aboutHvr:hover{
+    background-color: transparent;
+    color: white;
+}
+#syncInfo{
+    font-family: Lexend Deca;
+    color: white;
+    font-size: 10px;
+    margin-top: 20px;
+    margin-left: 20px;
+    font-style: italic;
+}
+.icon{
+    height: 20px;
+    width: 20px;
+    margin-top: -35px;
+    margin-left: 75px;
+    position: absolute;
+}
+
+#about{
+    font-family: Lexend Deca;
+    color: white;
+    font-size: 17px;
+    margin-top: 20px;
+    margin-left: 20px;
+    width: 300px;
+    position: absolute;
+    margin-top: -50px;
+    margin-left: 300px;
+    background-color: #2e2e2e;
+    padding: 5px 15px;
+    border-style: solid;
+    border-radius: 15px;
+    display: none;
+}
+
+#google-status{
+    font-family: Lexend Deca;
+    color: white;
+    font-size: 18px;
+    margin-left: 30px;
+}
+
+#accountInfo{
+    font-family: Lexend Deca;
+    color: white;
+    font-size: 15px;
+    margin-left: 50px;
+}

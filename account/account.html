@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your A1dos Account</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="icon" type="image/x-icon" href="/AuthFaviconLight.png" id="favicon">
+</head>
+
+<script>
+    function updateFavicon() {
+    const favicon = document.getElementById("favicon");
+    const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    favicon.href = isDarkMode ? "/AuthFaviconDark.png" : "/AuthFaviconLight.png";
+}
+    updateFavicon();
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", updateFavicon);
+</script>
+
+<body style="background-color: rgb(32, 32, 32);">
+
+    <p id="message"></p>
+
+    <h1 class="header1">Account Management</h1>
+    
+    <h2 class="header2">Account Info:</h2>
+    <div id="accountInfo"></div>
+
+    <button id="google-link-btn" class="link">
+        <p id="google-link-btn-text">Link Google Account</p>
+        <img src="/googleLogo.png" alt="Google Icon" class="icon">
+    </button>
+    <p id="aboutHvr">?</p>
+    <div id="about">
+        <p>Linking your Google account will allow you to sync your Google Classroom assignments and Calendar tasks with STL. It will also sync your created tasks to your Google Calendar.</p>
+    </div>
+
+    <p id="google-status"></p>
+    <script src="account.js"></script>
+
+    <div id="syncInfo">
+        <p>Your Google Classroom assignments and Calendar tasks will sync soon!</p>
+      </div>
+</body>
+</html>

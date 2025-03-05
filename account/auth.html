@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Register</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="icon" type="image/x-icon" href="/AuthFaviconLight.png" id="favicon">
+</head>
+
+<script>
+    function updateFavicon() {
+    const favicon = document.getElementById("favicon");
+    const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    favicon.href = isDarkMode ? "AuthFaviconDark.png" : "AuthFaviconLight.png";
+}
+updateFavicon();
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", updateFavicon);
+</script>
+
+<body>
+    <p id="message"></p>
+
+    <h2 id="LoginH">Login</h2>
+    <div id="loginDiv">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="loginUser()">Login</button>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div id="registerDiv">
+        <h2 id="RegisterH">Register</h2>
+        <input type="text" id="name" placeholder="Name">
+        <input type="email" id="reg-email" placeholder="Email">
+        <input type="password" id="reg-password" placeholder="Password">
+        <button onclick="registerUser()">Register</button>
+    </div>
+
+    <button onclick="logoutUser()" id="logout">Logout</button>
+
+    <script src="auth.js"></script>
+</body>
+</html>

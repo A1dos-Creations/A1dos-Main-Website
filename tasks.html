@@ -1,0 +1,22 @@
+<!-- website-public/tasks.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task Manager</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h2>Task Manager</h2>
+  <form id="task-form">
+    <input type="text" name="title" placeholder="Task Title" required>
+    <textarea name="details" placeholder="Task Details"></textarea>
+    <button type="submit">Add Task</button>
+  </form>
+  <ul id="task-list">
+    <!-- Tasks will appear here -->
+  </ul>
+  <button id="refresh-tasks">Refresh Tasks</button>
+  <script src="tasks.js"></script>
+</body>
+</html>

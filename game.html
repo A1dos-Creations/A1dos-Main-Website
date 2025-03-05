@@ -1,0 +1,479 @@
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3D Block Destruction Game</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
+    body { margin: 0; overflow: hidden; background: #000000; }
+    canvas { display: block; }
+    #instructions {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-family: "Lexend Deca";
+      font-size: 24px;
+      z-index: 100;
+      user-select: none;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+    #gun {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      width: 500px;
+      height: auto;
+      pointer-events: none;
+      display: none;
+    }
+    #background {
+      position: fixed;
+      background-color: #00000048;
+      backdrop-filter: blur(2px);
+      z-index: 1;
+      width: 100%;
+      height: 100vh;
+    }
+
+    #warn {
+      position: absolute;
+      top: 0%;
+      width: 100%;
+      text-align: center;
+      color: rgba(255, 95, 95, 0.623);
+      font-family: "Lexend Deca";
+      font-size: 11px;
+      z-index: 100;
+      user-select: none;
+      transform: translateY(-50%);
+      cursor: none;
+    }
+  </style>
+  
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+      "three/examples/jsm/controls/PointerLockControls.js": "https://unpkg.com/three@0.128.0/examples/jsm/controls/PointerLockControls.js",
+      "cannon": "https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="background"></div>
+  <div id="instructions">
+    Click to Play<br>
+    WASD to move, Mouse to look<br>
+    Left-click to shoot<br>
+    Space to jump, R to reset.
+  </div>
+  <img id="gun" src="gun.png">
+  <p id="warn" style="display: none;">Full Screen is reccomended</p>
+  
+  <script type="module">
+    import * as THREE from 'three';
+    import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
+    import * as CANNON from 'cannon';
+    
+    let scene, camera, renderer, controls;
+    let world, playerBody;
+    let blocks = [];
+    let projectiles = [];
+    const timeStep = 1 / 60;
+    let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false, canJump = false;
+    
+    // For head bobbing:
+    let bobTime = 0;
+    let lastTime = performance.now() / 1000;
+    
+    init();
+    animate();
+    
+    function init() {
+      // Scene & Camera
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+    
+      // Lighting
+      scene.add(new THREE.AmbientLight(0x404040));
+      const light = new THREE.DirectionalLight(0xffffff, 0.85);
+      light.position.set(5, 10, 7.5);
+      scene.add(light);
+    
+      // Physics World
+      world = new CANNON.World();
+      world.gravity.set(0, -9.82, 0);
+    
+      // Player Physics (Group 1, collides with Group 4)
+      const playerShape = new CANNON.Sphere(1);
+      playerBody = new CANNON.Body({ mass: 1 });
+      playerBody.addShape(playerShape);
+      playerBody.position.set(0, 2, 5);
+      playerBody.collisionFilterGroup = 1;
+      playerBody.collisionFilterMask = 4;
+      // Allow jump when colliding
+      playerBody.addEventListener("collide", () => canJump = true);
+      world.addBody(playerBody);
+    
+      // Pointer Lock Controls
+      controls = new PointerLockControls(camera, document.body);
+      const instructions = document.getElementById('instructions');
+      const gunImage = document.getElementById('gun');
+      const background = document.getElementById('background');
+      instructions.addEventListener('click', () => {
+        controls.lock();
+        instructions.style.display = 'none';
+        gunImage.style.display = 'block';
+        background.style.display = 'none';
+      });
+      scene.add(controls.getObject());
+    
+      // Keyboard & Mouse Events
+      document.addEventListener('keydown', onKeyDown);
+      document.addEventListener('keyup', onKeyUp);
+      document.addEventListener('mousedown', (e) => { if (e.button === 0) shootProjectile(); });
+      document.addEventListener('keydown', toggleMenu, toggleAutoShoot);
+    
+      // Ground (Group 4)
+      const groundBody = new CANNON.Body({ mass: 0, shape: new CANNON.Plane() });
+      groundBody.quaternion.setFromEuler(-Math.PI/2, 0, 0);
+      groundBody.collisionFilterGroup = 4;
+      groundBody.collisionFilterMask = 1 | 2 | 4;
+      world.addBody(groundBody);
+    
+      const groundMesh = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshLambertMaterial({ color: 0x808080 }));
+      groundMesh.rotation.x = -Math.PI/2;
+      scene.add(groundMesh);
+    
+      // Boundary Walls
+      createBoundaryWalls();
+    
+      // Blocks
+      createBlocks();
+    }
+
+    const smileyEnemies = [];
+
+function spawnSmileyEnemy() {
+    if (Math.random() < 1) {
+        const geometry = new THREE.SphereGeometry(1, 16, 16);
+        const material = new THREE.MeshBasicMaterial({ color: "black" });
+        const mesh = new THREE.Mesh(geometry, material);
+        
+        const body = new CANNON.Body({ mass: 1, shape: new CANNON.Sphere(1) });
+        body.position.set(
+            (Math.random() - 0.5) * 50,
+            2,
+            (Math.random() - 0.5) * 50
+        );
+
+        mesh.position.copy(body.position);
+        scene.add(mesh);
+        world.addBody(body);
+
+        smileyEnemies.push({ mesh, body });
+    }
+}
+
+function updateSmileyEnemies(playerPosition) {
+    smileyEnemies.forEach(({ mesh, body }) => {
+        const direction = new THREE.Vector3().subVectors(playerPosition, mesh.position).normalize();
+        body.velocity.set(direction.x * 5, direction.y * 5, direction.z * 5);
+        mesh.position.copy(body.position);
+        
+        if (mesh.position.distanceTo(playerPosition) < 1.5) {
+            crashGame();
+        }
+    });
+}
+
+function crashGame() {
+    while (true) {
+        console.log("You've been caught!");
+    }
+}
+
+export { spawnSmileyEnemy, updateSmileyEnemies };
+
+
+    function toggleAutoShoot() {
+      if (event.key !== 'F') {
+        const autoShoot = false;
+        if (autoShoot) {
+          autoShootInterval = setInterval(shootProjectile(), 1000);
+          autoShoot = true;
+        } else {
+          clearInterval(autoShootInterval);
+          autoShoot = false;
+        }
+      }
+    }
+    
+    function toggleMenu(event) {
+      if (event.key === 'Escape') {
+        const menu = document.getElementById('instructions');
+        const gun = document.getElementById('gun');
+        const background = document.getElementById('background');
+        if (menu.style.display === 'none') {
+          menu.style.display = 'block';
+          gun.style.display = 'none';
+          background.style.display = 'block';
+        } else {
+          controls.lock();
+          menu.style.display = 'none';
+          gun.style.display = 'block';
+          background.style.display = 'none';
+        }
+      }
+    }
+    
+    function createBoundaryWalls() {
+      const wallMaterial = new THREE.MeshLambertMaterial({ color: "gray" });
+      const wallGeometry = new THREE.BoxGeometry(100, 10, 1);
+    
+      const positions = [
+        { x: 0, y: 5, z: -50 },
+        { x: 0, y: 5, z: 50 },
+        { x: -50, y: 5, z: 0, rotationY: Math.PI/2 },
+        { x: 50, y: 5, z: 0, rotationY: Math.PI/2 }
+      ];
+    
+      positions.forEach(pos => {
+        const wallMesh = new THREE.Mesh(wallGeometry, wallMaterial);
+        wallMesh.position.set(pos.x, pos.y, pos.z);
+        if (pos.rotationY) wallMesh.rotation.y = pos.rotationY;
+        scene.add(wallMesh);
+    
+        const wallBody = new CANNON.Body({ mass: 0, shape: new CANNON.Box(new CANNON.Vec3(50, 5, 0.5)) });
+        wallBody.position.set(pos.x, pos.y, pos.z);
+        if (pos.rotationY) wallBody.quaternion.setFromEuler(0, pos.rotationY, 0);
+        wallBody.collisionFilterGroup = 4;
+        wallBody.collisionFilterMask = 1 | 2 | 4;
+        world.addBody(wallBody);
+      });
+    }
+    
+    function createBlocks() {
+      const blockGeo = new THREE.BoxGeometry(1, 0.5, 0.5);
+      for (let i = 0; i < 7; i++) {
+        for (let j = 0; j < 20; j++) {
+          const x = j - 5, y = i + 0.01, z = -10;
+          const blockMat = new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff });
+          const blockMesh = new THREE.Mesh(blockGeo, blockMat);
+          blockMesh.position.set(x,y,z);
+          scene.add(blockMesh);
+    
+          const blockBody = new CANNON.Body({ mass: 5, shape: new CANNON.Box(new CANNON.Vec3(0.5, 0.25, 0.25)) });
+          blockBody.position.set(x, y, z);
+          blockBody.collisionFilterGroup = 4;
+          blockBody.collisionFilterMask = 1 | 2 | 4;
+          world.addBody(blockBody);
+    
+          blocks.push({ mesh: blockMesh, body: blockBody });
+        }
+      }
+    }
+    
+    function onKeyDown(event) {
+      switch (event.code) {
+        case 'KeyW': moveForward = true; break;
+        case 'KeyS': moveBackward = true; break;
+        case 'KeyA': moveLeft = true; break;
+        case 'KeyD': moveRight = true; break;
+        case 'Space': if (canJump) { playerBody.velocity.y = 5; canJump = false; } break;
+        case 'KeyR': resetGame(); break;
+        case 'KeyG': throwGrenade(); break;
+      }
+    }
+    
+    function onKeyUp(event) {
+      switch (event.code) {
+        case 'KeyW': moveForward = false; break;
+        case 'KeyS': moveBackward = false; break;
+        case 'KeyA': moveLeft = false; break;
+        case 'KeyD': moveRight = false; break;
+      }
+    }
+    
+    // Regular projectile shooting with left-click
+    function shootProjectile() {
+      if (!controls.isLocked) return;
+      const offset = new THREE.Vector3(0, -0.3, -2).applyQuaternion(camera.quaternion);
+      const startPos = new THREE.Vector3().copy(camera.position).add(offset);
+    
+      const sphereMat = new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff });
+      const sphereMesh = new THREE.Mesh(new THREE.SphereGeometry(0.1, 8, 8), sphereMat);
+      sphereMesh.position.copy(startPos);
+      scene.add(sphereMesh);
+    
+      const sphereBody = new CANNON.Body({ mass: 1, shape: new CANNON.Sphere(0.1) });
+      sphereBody.position.copy(startPos);
+      sphereBody.collisionFilterGroup = 2;
+      sphereBody.collisionFilterMask = 4;
+      world.addBody(sphereBody);
+    
+      const shootDir = new THREE.Vector3();
+      camera.getWorldDirection(shootDir);
+      sphereBody.velocity.set(shootDir.x * 20, shootDir.y * 20, shootDir.z * 20);
+    
+      animateRecoil();
+    
+      const projectile = { mesh: sphereMesh, body: sphereBody };
+      projectiles.push(projectile);
+    
+      setTimeout(() => {
+          scene.remove(sphereMesh);
+          world.removeBody(sphereBody);
+          const index = projectiles.indexOf(projectile);
+          if (index !== -1) { projectiles.splice(index, 1); }
+      }, 3000);
+    }
+    
+    // Grenade throwing with G key.
+    // Grenade is a dark-green cube that explodes after 2 seconds.
+    function throwGrenade() {
+      if (!controls.isLocked) return;
+      const offset = new THREE.Vector3(0, -0.3, -2).applyQuaternion(camera.quaternion);
+      const startPos = new THREE.Vector3().copy(camera.position).add(offset);
+    
+      const grenadeMat = new THREE.MeshLambertMaterial({ color: 0x006400 });
+      const grenadeGeo = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+      const grenadeMesh = new THREE.Mesh(grenadeGeo, grenadeMat);
+      grenadeMesh.position.copy(startPos);
+      scene.add(grenadeMesh);
+    
+      const grenadeBody = new CANNON.Body({ mass: 1, shape: new CANNON.Box(new CANNON.Vec3(0.1, 0.1, 0.1)) });
+      grenadeBody.position.copy(startPos);
+      grenadeBody.collisionFilterGroup = 8;
+      grenadeBody.collisionFilterMask = 4;
+      world.addBody(grenadeBody);
+    
+      const throwDir = new THREE.Vector3();
+      camera.getWorldDirection(throwDir);
+      // Increase multiplier so grenade moves noticeably.
+      grenadeBody.velocity.set(throwDir.x * 30, throwDir.y * 30, throwDir.z * 30);
+    
+      setTimeout(() => {
+        explodeGrenade(grenadeMesh, grenadeBody);
+      }, 2000);
+    }
+    
+    // Explosion: applies impulse to nearby blocks.
+    function explodeGrenade(grenadeMesh, grenadeBody) {
+      const explosionPos = grenadeBody.position.clone();
+      const explosionForce = 50;      // Adjust as needed
+      const explosionRadius = 5;      // Adjust as needed
+    
+      blocks.forEach(block => {
+        const body = block.body;
+        const diff = new CANNON.Vec3();
+        body.position.vsub(explosionPos, diff);
+        const distance = diff.length();
+        if (distance < explosionRadius) {
+          const impulseMagnitude = explosionForce * (1 - distance / explosionRadius);
+          diff.normalize();
+          const impulse = new CANNON.Vec3(diff.x * impulseMagnitude, diff.y * impulseMagnitude, diff.z * impulseMagnitude);
+          body.applyImpulse(impulse, body.position);
+        }
+      });
+    
+      scene.remove(grenadeMesh);
+      world.removeBody(grenadeBody);
+    }
+    
+    function animateRecoil() {
+      const gunImage = document.getElementById('gun');
+      if (!gunImage) return;
+      const recoilAmount = 20;
+      const recoilDuration = 100;
+      const startTime = Date.now();
+      function updateRecoil() {
+          const elapsed = Date.now() - startTime;
+          const t = Math.min(elapsed / recoilDuration, 1);
+          const currentRecoil = recoilAmount * (1 - t);
+          gunImage.style.transform = `translateY(${currentRecoil}px)`;
+          if (t < 1) {
+              requestAnimationFrame(updateRecoil);
+          } else {
+              gunImage.style.transform = 'translateY(0)';
+          }
+      }
+      updateRecoil();
+    }
+    
+    function resetGame() {
+      blocks.forEach(block => {
+          scene.remove(block.mesh);
+          world.removeBody(block.body);
+      });
+      blocks = [];
+      projectiles.forEach(proj => {
+          scene.remove(proj.mesh);
+          world.removeBody(proj.body);
+      });
+      projectiles = [];
+      createBlocks();
+      playerBody.position.set(0, 2, 5);
+      playerBody.velocity.set(0, 0, 0);
+    }
+    
+    function animate() {
+      requestAnimationFrame(animate);
+      
+      const now = performance.now() / 1000;
+      const delta = now - lastTime;
+      lastTime = now;
+      
+      world.step(timeStep);
+      
+      blocks.forEach(block => {
+          block.mesh.position.copy(block.body.position);
+          block.mesh.quaternion.copy(block.body.quaternion);
+      });
+      
+      projectiles.forEach(proj => {
+          proj.mesh.position.copy(proj.body.position);
+          proj.mesh.quaternion.copy(proj.body.quaternion);
+      });
+      
+      if (controls.isLocked) {
+          const moveSpeed = 5;
+          const inputDir = new CANNON.Vec3();
+          if (moveForward) inputDir.z += moveSpeed;
+          if (moveBackward) inputDir.z -= moveSpeed;
+          if (moveLeft) inputDir.x -= moveSpeed;
+          if (moveRight) inputDir.x += moveSpeed;
+          const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+          const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+          const movement = new THREE.Vector3().addScaledVector(forward, inputDir.z).addScaledVector(right, inputDir.x);
+          playerBody.velocity.set(movement.x, playerBody.velocity.y, movement.z);
+      }
+      
+      // Head bobbing effect when moving
+      if (controls.isLocked && (moveForward || moveBackward || moveLeft || moveRight)) {
+          bobTime += delta * 10;
+      } else {
+          bobTime = 0;
+      }
+      const bobOffset = Math.sin(bobTime) * 0.1;
+      
+      camera.position.copy(playerBody.position);
+      camera.position.y += bobOffset;
+      
+      renderer.render(scene, camera);
+    }
+    
+    lastTime = performance.now() / 1000;
+    bobTime = 0;
+  </script>
+</body>
+</html>
+-->

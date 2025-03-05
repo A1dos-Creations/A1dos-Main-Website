@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1dos Creations - STL Home</title>
+    <link rel="icon" type="image/x-icon" href="newFavicon.png">
+</head>
+<body class="STLHome">
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="app.js"></script>
+<nav>
+    <a href="index.html">
+      <img src="MainFavicon.png" style="height: 45px;width: auto;border-radius: 4px;border-width: 2px;">
+    </a>
+    <a href="./account/auth" id="login-button" style="background-color: rgba(0, 0, 0, 0);text-decoration: none;"onclick="">
+      <button class="navItems" id="loginTxt" style="font-family: Lexend Deca, serif;">Login</button>
+    </a>
+</nav>
+</head>
+
+<canvas id="starsCanvas"></canvas>
+<script src="deco.js"></script>
+
+<section class="hidden">
+<body class="gradient-container" style="background-color: black;">
+<h1 style="color: rgb(255, 255, 255);text-align: center;font-family: monospace;font-size: 120px;"> < School Tool Launcher ></h1>
+</section>
+<style>
+      @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+
+    .fade-out {
+        animation: fadeOut 1s forwards;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    .fade-in {
+        animation: fadeIn 1s forwards;
+    }
+</style>
+
+<video id="STLTrailer" class="hidden" controls autoplay controlslist="nodownload" style="width: auto;height: 500px;display: block;margin-left: auto;margin-right: auto;margin-top: 50px;border-radius: 20px;border-style: solid;">
+  <source src="STL Ad v4.mov" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+<div style="justify-content: center;justify-items: center;align-items: center;align-content: center;" class="hidden">
+  <button id="rewatch" style="opacity: 0;">Rewatch video</button>
+</div>
+
+
+<script>
+  document.getElementById('STLTrailer').addEventListener('contextmenu', event => event.preventDefault());
+
+  document.addEventListener("DOMContentLoaded", () => {
+        const video = document.getElementById("STLTrailer");
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.intersectionRatio < 0.2) {
+                    video.pause(); // Pause when less than 20% visible
+                } else if (entry.intersectionRatio > 0.25 && video.paused) {
+                    video.play(); // Play when at least 25% visible & was paused
+                }
+            });
+        }, { threshold: [0.2, 0.25] });
+
+        observer.observe(video);
+    });
+
+    // Hide the video when it ends
+    document.addEventListener("DOMContentLoaded", () => {
+        const video = document.getElementById("STLTrailer");
+        const rewatch = document.getElementById("rewatch");
+
+        video.addEventListener("ended", () => {
+            setTimeout(() => {
+                video.classList.add("fade-out");
+                video.classList.remove("fade-in");
+                
+                rewatch.classList.remove("fade-out");
+                rewatch.classList.add("fade-in");
+                rewatch.style.display = "block";
+
+                setTimeout(() => {
+                    video.style.display = "none";
+                }, 1000);
+            }, 2000);
+        });
+        rewatch.addEventListener("click", () => {
+            video.style.display = "block";
+            video.classList.add("fade-in");
+            video.classList.remove("fade-out");
+
+            rewatch.classList.add("fade-out");
+            rewatch.classList.remove("fade-in");
+            rewatch.style.display = "none";
+            video.play();
+        });
+    });
+</script>
+
+<style>
+</style>
+
+<section class="hidden" style="height: 460px;margin-top: 50px;margin-bottom: 175px;">
+  <h1 class="SPLAbout">About</h1>
+  <p class="SPLAboutP">Ever gotten tired of the hassle to find school websites? The long URLs, the slow loading websites? Well, now you can Take control of your academic life with this game-changing Chrome extension. Effortlessly access your school portals, organize assignments with custom tasks, and add personalized portals for quick, easy access to the resources you need. Built with students in mind, it’s designed to simplify your daily routine and keep you ahead of the curve.</p>
+</section>
+
+<section class="hidden">
+<h1 style="margin-top:10px;font-size: 100px;text-align: center;font-family:Lexend Deca, monospace, serif;">Download Extension:</h1>
+<div style="text-align: center;">
+<p style="color: rgb(255, 255, 255);font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;font-size: 18px;">Recent Release:</p>
+<a href="https://chromewebstore.google.com/detail/School%20Portal%20Launcher/pafdkffolelojifgeepmjjofdendeojf?hl=en&authuser=0" class="download1">Download - v1.2.x</a>
+<br>
+<br>
+</div>
+</section>
+
+<section class="hidden" style="height: 460px;margin-top: 80px;margin-bottom: -30px;">
+  <h1 style="font-size: 100px;text-align: center;font-family:Lexend Deca, monospace, serif;">Future Updates:</h1>
+  <br>
+  <p class="SPLAboutP" style="margin-top: -20px;">I am planning on adding a link to Google's Calendar and Google Classroom for more dynamic tasks and task integration with Google Calendar. <i>This will use a thrid party service named "Clerk".</i> Signing in with google will be optional, but required for certain features. I am also planning on adding more features such as reminders for tasks that show in-line with the website you're on. I am also hoping to add dynamic external connection to my website <a href="https://a1dos-creations.com" style="color: rgb(178, 197, 206);">A1dos-Creations.com</a> to update the discover page without the hassle of getting the extension re-evaluated. More updates will be availible later in the month! Thank you for your interest in STL! ❤️</p>
+  <p class="SPLAboutP" style="font-size: small;">- A1dos, 2/4/25</p>
+</section>
+
+<section class="hidden" style="margin-top: 125px;">
+
+  <h1 class="ss">Gallery</h1>
+  <p style="font-family: Lexend Deca, monospace, serif;margin-top: -20px;">Screenshots of Extension v1.2.2b</p>
+
+  <div class="slideshow-container">
+  
+  <div style="text-align: center;" class="mySlides fade">
+    <img src="STL Promo 1.png" style="width:90%; height: 90%;border-radius: 20px;">
+    <div class="text"></div>
+  </div>
+  
+  <div style="text-align: center;" class="mySlides fade">
+    <img src="STL Promo 2.png" style="width:90%;height: 90%;border-radius: 20px;">
+    <div class="text"></div>
+  </div>
+  
+  <div style="text-align: center;" class="mySlides fade">
+    <img src="STL Promo 3.png" style="width:90%;height: 90%;border-radius: 20px;">
+    <div class="text"></div>
+  </div>
+
+  <div style="text-align: center;" class="mySlides fade">
+    <img src="STL Promo 4.png" style="width:90%; height: 90%;border-radius: 20px;">
+    <div class="text"></div>
+  </div>
+
+  <div style="text-align: center;" class="mySlides fade">
+    <img src="STL Promo 5.png" style="width:90%; height: 90%;border-radius: 20px;">
+    <div class="text"></div>
+  </div>
+
+  <div style="text-align: center;" class="mySlides fade">
+    <img src="STL Promo 6.png" style="width:90%; height: 90%;border-radius: 20px;">
+    <div class="text"></div>
+  </div>
+  
+  </div>
+  </section>
+  <br>
+  
+  <script>
+  let slideIndex = 0;
+  showSlides();
+  
+  function showSlides() {
+    let i;
+    let slides = document.getElementsByClassName("mySlides");
+    for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";  
+    }
+    slideIndex++;
+    if (slideIndex > slides.length) {slideIndex = 1}    
+    slides[slideIndex-1].style.display = "block";
+    setTimeout(showSlides, 10000);
+  }
+  </script>
+  <section class="hidden" style="justify-content: center;align-items: center;">
+    <a href="https://forms.gle/ReYDZYTro5SNtpcy8">
+      <button class="nextPage2">
+        <b>Submit a Portal</b>
+      </button>
+    </a>
+  </section>
+
+<section class="hidden" style="margin-top:100px;margin-bottom: -90px;">
+<br>
+<a href="privacypolicy.html" style="margin-top: 100px;">
+  <button class="nextPage" style="font-size: large;">Privacy Policy</button>
+</a>
+<a href="https://github.com/R3DD3ST/School-Portal-Launcher" style="width: 40px;right: 15%;">
+  <img src="github.png" alt="Github logo" style="width: 40px;height: auto;display: block;margin-top: 15px;">
+</a>
+</section>
+
+<!--<div id="gradient-overlay"></div>-->
+
+<section>
+<script>
+/*
+const overlay = document.getElementById('gradient-overlay');
+    let targetX = 50; // Target position (%)
+    let targetY = 50;
+    let currentX = 50; // Current position (%)
+    let currentY = 50;
+
+    const startColor = [41, 100, 238];  // Left side color
+    const endColor = [0, 162, 220];    // Right side color
+    let currentColor = startColor;
+
+    const easingFactor = 0.1;
+
+  document.addEventListener('mousemove', (event) => {
+    targetX = (event.clientX / window.innerWidth) * 100;
+    targetY = (event.clientY / window.innerHeight) * 100;
+
+    const blendFactor = targetX / 100; // 0 (left) to 1 (right)
+    currentColor = startColor.map((start, index) =>
+      Math.round(start + (endColor[index] - start) * blendFactor)
+    );
+  });
+
+  function animate() {
+    currentX += (targetX - currentX) * easingFactor;
+    currentY += (targetY - currentY) * easingFactor;
+
+    const gradientColor = `rgba(${currentColor.join(",")}, 0.6)`;
+
+    overlay.style.background = `radial-gradient(circle 220px at ${currentX}% ${currentY}%, ${gradientColor} 0%, rgba(255, 255, 255, 0) 50%)`;
+
+    requestAnimationFrame(animate);
+  }
+
+  animate(); */
+
+  // Dynamic color invert for highligh
+  document.addEventListener('selectionchange', () => {
+      const selection = window.getSelection();
+      if (!selection.isCollapsed) {
+        const range = selection.getRangeAt(0);
+        const parentElement = range.commonAncestorContainer.parentElement;
+
+        if (parentElement) {
+          const computedStyle = window.getComputedStyle(parentElement);
+          const originalColor = computedStyle.color;
+
+          const invertedColor = invertColor(originalColor);
+
+          document.documentElement.style.setProperty('--dynamic-selection-color', invertedColor);
+        }
+      }
+    });
+    function invertColor(color) {
+      const rgb = color.match(/\d+/g);
+      if (rgb) {
+        const [r, g, b] = rgb.map(Number);
+        return `rgb(${0 - r}, ${0 - g}, ${0 - b})`;
+      } 
+      return '#000000'; // Fallback color
+    }
+
+</script>
+</section>
+
+<svg width="0" height="0">
+  <filter id="blurFilter">
+    <feGaussianBlur stdDeviation="30" />
+  </filter>
+</svg>
+
+</body>
+</html>
