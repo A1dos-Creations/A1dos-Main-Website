@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem("user");
         localStorage.removeItem("googleLinked");
     
-        window.location.href = "/auth.html"; 
+        window.location.href = "account/auth"; 
     }
 
     updateGoogleButton();
