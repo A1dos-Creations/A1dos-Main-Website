@@ -322,6 +322,42 @@ button:hover{
     left: 0;
     right: 0;
 }
+#devicesListContainer{
+    justify-self: center;
+    background-color: rgb(184, 184, 184);
+    padding: 10px 20px;
+    font-family: Lexend Deca;
+    color: rgb(37, 37, 37);
+    margin-top: -800px;
+    margin-left: auto;
+    width: max-content;
+    margin-right: 50px;
+    border-radius: 8px;
+}
+#devicesListContainer p{
+    font-size: 20px;
+    margin-top: 10px;
+}
+#devicesListContainer button{
+    width: 120px;
+    height: 30px;
+    font-size: 15px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border-style: solid;
+    border-color: rgb(37, 37, 37);
+    background-color: rgb(184, 184, 184);
+}
+#devicesListContainer button:hover{
+    width: 120px;
+    height: 30px;
+    font-size: 15px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border-style: solid;
+    border-color: rgb(37, 37, 37);
+    background-color: rgb(151, 151, 151);
+}
 #hm7235897g7{
     font-family: Lexend Deca;
     color: white;

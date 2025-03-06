@@ -270,42 +270,44 @@ function removeGoogleLinkedParam() {
     const devicesList = document.getElementById('devicesList');
     const token = localStorage.getItem('authToken');
   
-    toggleDevicesBtn.addEventListener('click', () => {
-      if (devicesList.style.display === 'none') {
-        fetch('https://a1dos-login.onrender.com/get-user-sessions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token })
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            devicesList.innerHTML = "";
-            data.sessions.forEach(session => {
-              const li = document.createElement('li');
-              li.innerHTML = `
-                <strong>Device:</strong> ${session.device_info}<br>
-                <strong>IP:</strong> ${session.ip_address}<br>
-                <strong>Login Time:</strong> ${new Date(session.login_time).toLocaleString()}
-                <button onclick="revokeSession(${session.id})">Revoke</button>
-              `;
-              devicesList.appendChild(li);
-            });
-            devicesList.style.display = 'block';
-          } else {
-            devicesList.innerHTML = "<li>Unable to fetch sessions.</li>";
-            devicesList.style.display = 'block';
-          }
-        })
-        .catch(err => {
-          console.error("Error fetching sessions:", err);
-          devicesList.innerHTML = "<li>Error fetching sessions.</li>";
-          devicesList.style.display = 'block';
+    fetch('https://a1dos-login.onrender.com/get-user-sessions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token })
+    })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(text => { 
+          throw new Error("Server returned an error: " + text);
         });
-      } else {
-        devicesList.style.display = 'none';
       }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success) {
+        devicesList.innerHTML = "";
+        data.sessions.forEach(session => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <strong>Device:</strong> ${session.device_info}<br>
+            <strong>IP:</strong> ${session.ip_address}<br>
+            <strong>Login Time:</strong> ${new Date(session.login_time).toLocaleString()}
+            <button onclick="revokeSession(${session.id})">Revoke</button>
+          `;
+          devicesList.appendChild(li);
+        });
+        devicesList.style.display = 'block';
+      } else {
+        devicesList.innerHTML = "<li>Unable to fetch sessions.</li>";
+        devicesList.style.display = 'block';
+      }
+    })
+    .catch(err => {
+      console.error("Error fetching sessions:", err);
+      devicesList.innerHTML = `<li>${err.message}</li>`;
+      devicesList.style.display = 'block';
     });
+    
   });
   
   function revokeSession(sessionId) {
