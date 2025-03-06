@@ -93,6 +93,7 @@ button:hover{
     margin-top: 20px;
     max-width: 200px;
     justify-self: center;
+    position: absolute;
     text-align: center;
     padding: 15px;
     background-color: #f0b7a4;
@@ -100,8 +101,8 @@ button:hover{
     border-style: solid;
     border-color: rgb(160, 62, 45);
     display: none;
-    margin-left: auto;
-    margin-right: auto;
+    left: 0;
+    right: 0;
 }
 #shwRgstr{
     font-family: Lexend Deca;
@@ -271,6 +272,55 @@ button:hover{
     height: 50px;
     width: 160px;
     box-shadow: 0px 0px 20px 15px rgba(255, 208, 0, 0.493);
+}
+#donateInstead{
+    margin-bottom: 30px;
+    margin-top: -11px;
+    height: 45px;
+    width: 140px;
+}
+#resetPswPopup{
+    display: none;
+    position: absolute;
+    background-color: #0f0f0f;
+    padding: 30px 15px;
+    height: 350px;
+    width: 600px;
+    border-radius: 15px;
+    top: 35%;
+
+    right: 0;
+    left: 0;
+    justify-self: center;
+    bottom: 0;
+    justify-items: center;
+    text-align: center;
+}
+#sendCodeBtn{
+    width: 170px;
+}
+#changePassword{
+    display: block;
+}
+#changePassword button{
+    width: 140px;
+}
+#pswAlert{
+    font-family: "Lexend Deca", sans-serif;
+    font-size: 15px;
+    margin-top: 20px;
+    max-width: 200px;
+    justify-self: center;
+    position: absolute;
+    text-align: center;
+    padding: 15px;
+    background-color: #f0b7a4;
+    border-radius: 8px;
+    border-style: solid;
+    display: none;
+    border-color: rgb(160, 62, 45);
+    left: 0;
+    right: 0;
 }
 #hm7235897g7{
     font-family: Lexend Deca;

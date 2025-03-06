@@ -138,6 +138,7 @@ function removeGoogleLinkedParam() {
       .then(data => {
         if (data.success) {
           showMessage("Google account unlinked successfully.", 'green');
+          setTimeout(() => showMessage(' ', 'black'), window.location.href = "account.html", 3000);
           googleLinked = false;
           googleStatus.textContent = "Google Account Not Linked ❌";
           localStorage.removeItem("googleLinked");
@@ -191,6 +192,71 @@ function removeGoogleLinkedParam() {
       .catch(error => {
         console.error('Error creating checkout session:', error);
       });
+    });
+
+    const sendCodeBtn = document.getElementById('sendCodeBtn');
+    const passwordForm = document.getElementById('passwordForm');
+    const showForm = document.getElementById('showForm');
+    const pswDiv = document.getElementById('resetPswPopup');
+
+    showForm.addEventListener('click', () => {
+      if(pswDiv.style.display === 'block') {
+          pswDiv.style.display = 'none';
+      } else {
+        pswDiv.style.display = 'block';
+      }
+    });
+
+    function showMessagePsw(msg, color = 'black') {
+      const message = document.getElementById('pswAlert');
+      message.textContent = msg;
+      message.style.color = color;
+      message.style.display = msg.trim() ? 'block' : 'none';
+    }
+
+    sendCodeBtn.addEventListener('click', () => {
+        const email = document.getElementById('email').value.trim();
+        fetch('https://a1dos-login.onrender.com/send-verification-code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                showMessagePsw("Verification code sent to your email.", 'green');
+                setTimeout(() => showMessagePsw(' ', 'black'), 3000);
+            } else {
+                showMessagePsw(data.message, "red");
+                setTimeout(() => showMessagePsw(' ', 'black'), 3000);
+            }
+        })
+        .catch(err => console.error('Error sending verification code:', err));
+    });
+
+    passwordForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const verificationCode = document.getElementById('verificationCode').value.trim();
+        const newPassword = document.getElementById('newPassword').value.trim();
+
+        fetch('https://a1dos-login.onrender.com/update-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, verificationCode, newPassword }),
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                showMessage("Password changed successfully.", 'green');
+                setTimeout(() => showMessage(' ', 'black'), 3000);
+                pswDiv.style.display = 'none';
+            } else {
+                showMessagePsw(data.message, 'red');
+                setTimeout(() => showMessagePsw(' ', 'black'), 3000);
+            }
+        })
+        .catch(err => console.error('Error updating password:', err));
     });
   
     updateGoogleButton();
