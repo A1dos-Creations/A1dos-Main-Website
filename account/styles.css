@@ -330,7 +330,7 @@ button:hover{
     color: rgb(37, 37, 37);
     margin-top: -800px;
     margin-left: auto;
-    width: max-content;
+    width: 600px;
     margin-right: 50px;
     border-radius: 8px;
 }
