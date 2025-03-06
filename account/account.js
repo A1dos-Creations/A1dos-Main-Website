@@ -39,6 +39,7 @@ function removeGoogleLinkedParam() {
       accountInfoDiv.innerHTML = `
         <p><strong>Email:</strong> ${user.email}</p>
         <p><strong>Account Created:</strong> ${createdAt}</p>
+        <p><strong>Name:</strong> ${user.name}</p>
       `;
     } else {
       accountInfoDiv.innerHTML = "<p>User data not available. Please log in.</p>";
