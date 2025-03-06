@@ -6,6 +6,7 @@
     <title>Your A1dos Account</title>
     <link rel="stylesheet" href="./styles.css">
     <link rel="icon" type="image/x-icon" href="/AuthFaviconLight.png" id="favicon">
+    <script src="https://js.stripe.com/v3/"></script>
 </head>
 
 <script>
@@ -25,7 +26,7 @@
 
     <div id="i51703n295b">
         <img src="/info.png" alt="Info Icon" id="infoIcon">
-        <h2 class="header3">Verification in Process</h2>
+        <h2 class="header3">Verification in Progress</h2>
         <p id="parg10351781">Our Google OAuth screen is currently under verification and will not be publicly availible for up to 1 month. Only select users are allowed test access.</p>
     </div>
 
@@ -37,14 +38,14 @@
         <h2 class="header2">Account Info: (A1dos Account)</h2>
         <div id="accountInfo"></div>
         <button id="logout-btn">Logout</button>
-    </div>
-
-    <button id="google-link-btn" class="link">
-        <p id="google-link-btn-text">Link Google Account</p>
-        <img src="/googleLogo.png" alt="Google Icon" class="icon">
-    </button>
-    <div id="about">
-        <p>Linking your Google account will allow you to sync your Google Classroom assignments and Calendar tasks with STL. It will also sync your created tasks to your Google Calendar.</p>
+        <button id="google-link-btn" class="link">
+            <p id="google-link-btn-text">Link Google Account</p>
+            <img src="/googleLogo.png" alt="Google Icon" class="icon">
+        </button>
+        <p id="google-status"></p>
+        <div id="about">
+            <p>Linking your Google account will allow you to sync your Google Classroom assignments and Calendar tasks with STL. It will also sync your created tasks to your Google Calendar.</p>
+        </div>
     </div>
 
     <div class="notification-settings">
@@ -56,7 +57,15 @@
         <span id="toggleLabel">Enabled</span>
       </div>
 
-    <p id="google-status"></p>
+      <div id="upgrd358725hg6">
+        <h1 class="header2">Upgrade Account (Coming Soon)</h1>
+        <p class="upgrd89129p">Upgrade now to unlock premium features and exclusive content.</p>
+        <button id="upgrade-button">Upgrade Now</button>
+        <button id="donateInstead">Donate Instead</button>
+      </div>
+
+      <script src="/redirect.js"></script>
+
     <script src="account.js"></script>
 </body>
 </html>

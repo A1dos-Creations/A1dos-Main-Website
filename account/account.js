@@ -161,6 +161,37 @@ function removeGoogleLinkedParam() {
       localStorage.removeItem("googleLinked");    
       window.location.href = "auth";
     }
+
+    const stripe = Stripe('YOUR_STRIPE_PUBLISHABLE_KEY');
+    
+
+    document.getElementById('upgrade-button').addEventListener('click', () => {
+      fetch('https://a1dos-login.onrender.com/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.valid) {
+          const userId = data.user.id;
+          return stripe.redirectToCheckout({ sessionId: data.id });
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Redirect the user to the Stripe Checkout page.
+        return stripe.redirectToCheckout({ sessionId: data.id });
+      })
+      .then(result => {
+        if (result.error) {
+          console.error(result.error.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error creating checkout session:', error);
+      });
+    });
   
     updateGoogleButton();
   });
