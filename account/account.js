@@ -164,7 +164,7 @@ function removeGoogleLinkedParam() {
       window.location.href = "auth";
     }
 
-    const stripe = Stripe('YOUR_STRIPE_PUBLISHABLE_KEY');
+    const stripe = Stripe('pk_live_51QzQdOG1SPsRBHogtiBFwbebzV9JmhES0R4ZZGjHABPcEvnpGZaFDGlDONzPMz0gNMn664g1fcfhrUYpaUv4We7o00QsWelAuT');
     
 
     document.getElementById('upgrade-button').addEventListener('click', () => {
