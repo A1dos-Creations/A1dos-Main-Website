@@ -268,6 +268,7 @@ function removeGoogleLinkedParam() {
   document.addEventListener('DOMContentLoaded', () => {
     const toggleDevicesBtn = document.getElementById('toggleDevicesBtn');
     const devicesList = document.getElementById('devicesList');
+    devicesList.style.display = 'block';
     const token = localStorage.getItem('authToken');
   
     fetch('https://a1dos-login.onrender.com/get-user-sessions', {
