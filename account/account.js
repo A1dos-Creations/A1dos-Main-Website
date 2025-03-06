@@ -259,7 +259,73 @@ function removeGoogleLinkedParam() {
         })
         .catch(err => console.error('Error updating password:', err));
     });
+
+    
   
     updateGoogleButton();
   });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleDevicesBtn = document.getElementById('toggleDevicesBtn');
+    const devicesList = document.getElementById('devicesList');
+    const token = localStorage.getItem('authToken');
+  
+    toggleDevicesBtn.addEventListener('click', () => {
+      if (devicesList.style.display === 'none') {
+        fetch('https://a1dos-login.onrender.com/get-user-sessions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            devicesList.innerHTML = "";
+            data.sessions.forEach(session => {
+              const li = document.createElement('li');
+              li.innerHTML = `
+                <strong>Device:</strong> ${session.device_info}<br>
+                <strong>IP:</strong> ${session.ip_address}<br>
+                <strong>Login Time:</strong> ${new Date(session.login_time).toLocaleString()}
+                <button onclick="revokeSession(${session.id})">Revoke</button>
+              `;
+              devicesList.appendChild(li);
+            });
+            devicesList.style.display = 'block';
+          } else {
+            devicesList.innerHTML = "<li>Unable to fetch sessions.</li>";
+            devicesList.style.display = 'block';
+          }
+        })
+        .catch(err => {
+          console.error("Error fetching sessions:", err);
+          devicesList.innerHTML = "<li>Error fetching sessions.</li>";
+          devicesList.style.display = 'block';
+        });
+      } else {
+        devicesList.style.display = 'none';
+      }
+    });
+  });
+  
+  function revokeSession(sessionId) {
+    const token = localStorage.getItem('authToken');
+    fetch('https://a1dos-login.onrender.com/revoke-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, sessionId })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        alert("Session revoked successfully.");
+        document.getElementById('toggleDevicesBtn').click(); 
+        document.getElementById('toggleDevicesBtn').click();
+      } else {
+        alert("Failed to revoke session: " + data.message);
+      }
+    })
+    .catch(err => console.error("Error revoking session:", err));
+  }
+  
   
