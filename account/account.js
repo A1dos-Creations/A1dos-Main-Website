@@ -388,14 +388,14 @@ document.addEventListener("DOMContentLoaded", () => {
       if (Date.now() > expiry) {
         alert("Your session has expired. Please log in again.");
         localStorage.removeItem("authToken");
-        window.location.href = "./account/auth.html";
+        window.location.href = "./auth.html";
       }
     } catch (error) {
       console.error("Error decoding token:", error);
-      window.location.href = "./account/auth.html";
+      window.location.href = "./auth.html";
     }
   } else {
-    window.location.href = "./account/auth.html";
+    window.location.href = "./auth.html";
   }
 });
 
