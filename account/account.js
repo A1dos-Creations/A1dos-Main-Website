@@ -314,7 +314,9 @@ function removeGoogleLinkedParam() {
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          alert("Session revoked successfully.");
+          showMessage("Session revoked successfully.", "green");
+          setTimeout(() => showMessage(' ', 'black'), 3000);
+
           if (sessionToken === currentToken) {
             localStorage.removeItem("authToken");
             localStorage.removeItem("user");
@@ -324,7 +326,9 @@ function removeGoogleLinkedParam() {
             loadUserSessions();
           }
         } else {
-          alert("Failed to revoke session: " + data.message);
+          showMessage("Failed to revoke session: " + data.message, "red");
+          setTimeout(() => showMessage(' ', 'black'), 3000);
+
         }
       })
       .catch(err => console.error("Error revoking session:", err));
