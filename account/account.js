@@ -264,6 +264,42 @@ function removeGoogleLinkedParam() {
     updateGoogleButton();
   });
 
+
+  function loadUserSessions() {
+    fetch("https://a1dos-login.onrender.com/get-user-sessions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+          const deviceList = document.getElementById("deviceList");
+          console.log("Device list element:", deviceList);
+          if (!deviceList) {
+            console.error("No element with id 'deviceList' found in the DOM.");
+          }
+          deviceList.innerHTML = "<br>";
+  
+          data.sessions.forEach(session => {
+              const li = document.createElement("li");
+              li.innerHTML = `
+                  <strong>Device:</strong> ${session.device_info} <br>
+                  <strong>Location:</strong> ${session.location || "Unknown Location"} <br>
+                  <strong>Last Login:</strong> ${new Date(session.login_time).toLocaleString()} 
+                  <button onclick="revokeSession(${session.id})">Revoke</button>
+                  <br>
+              `;
+              deviceList.appendChild(li);
+          });
+  
+          deviceList.style.display = "block";
+      } else {
+          deviceList.innerHTML = "<li>No sessions found.</li>";
+      } 
+     })
+      .catch(err => console.error("Error fetching sessions:", err));
+  }
   document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('authToken');
   
