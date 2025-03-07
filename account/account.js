@@ -182,7 +182,6 @@ function removeGoogleLinkedParam() {
       })
       .then(response => response.json())
       .then(data => {
-        // Redirect the user to the Stripe Checkout page.
         return stripe.redirectToCheckout({ sessionId: data.id });
       })
       .then(result => {
@@ -271,43 +270,36 @@ function removeGoogleLinkedParam() {
     devicesList.style.display = 'block';
     const token = localStorage.getItem('authToken');
   
-    fetch('https://a1dos-login.onrender.com/get-user-sessions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    fetch("https://a1dos-login.onrender.com/get-user-sessions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token })
     })
-    .then(response => {
-      if (!response.ok) {
-        return response.text().then(text => { 
-          throw new Error("Server returned an error: " + text);
-        });
-      }
-      return response.json();
-    })
+    .then(res => res.json())
     .then(data => {
       if (data.success) {
-        devicesList.innerHTML = "";
-        data.sessions.forEach(session => {
-          const li = document.createElement('li');
-          li.innerHTML = `
-            <strong>Device:</strong> ${session.device_info}<br>
-            <strong>IP:</strong> ${session.ip_address}<br>
-            <strong>Login Time:</strong> ${new Date(session.login_time).toLocaleString()}
-            <button onclick="revokeSession(${session.id})">Revoke</button>
-          `;
-          devicesList.appendChild(li);
-        });
-        devicesList.style.display = 'block';
+          const deviceList = document.getElementById("deviceList");
+          deviceList.innerHTML = "<br>";
+  
+          data.sessions.forEach(session => {
+              const li = document.createElement("li");
+              li.innerHTML = `
+                  <br><br> <strong>Device:</strong> ${session.device_info} <br>
+                  <strong>Location:</strong> ${session.location || "Unknown Location"} <br>
+                  <strong>Last Login:</strong> ${new Date(session.login_time).toLocaleString()} 
+                  <button onclick="revokeSession(${session.id})">Revoke</button>
+                  <br>
+              `;
+              deviceList.appendChild(li);
+          });
+  
+          deviceList.style.display = "block";
       } else {
-        devicesList.innerHTML = "<li>Unable to fetch sessions.</li>";
-        devicesList.style.display = 'block';
+          deviceList.innerHTML = "<li>No sessions found.</li>";
       }
-    })
-    .catch(err => {
-      console.error("Error fetching sessions:", err);
-      devicesList.innerHTML = `<li>${err.message}</li>`;
-      devicesList.style.display = 'block';
-    });
+  })
+  .catch(err => console.error("Error fetching sessions:", err));
+  
     
   });
   
