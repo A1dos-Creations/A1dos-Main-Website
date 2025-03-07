@@ -265,9 +265,6 @@ function removeGoogleLinkedParam() {
   });
 
   document.addEventListener('DOMContentLoaded', () => {
-    const toggleDevicesBtn = document.getElementById('toggleDevicesBtn');
-    const devicesList = document.getElementById('devicesList');
-    devicesList.style.display = 'block';
     const token = localStorage.getItem('authToken');
   
     fetch("https://a1dos-login.onrender.com/get-user-sessions", {
@@ -279,6 +276,10 @@ function removeGoogleLinkedParam() {
     .then(data => {
       if (data.success) {
           const deviceList = document.getElementById("deviceList");
+          console.log("Device list element:", deviceList);
+          if (!deviceList) {
+            console.error("No element with id 'deviceList' found in the DOM.");
+          }
           deviceList.innerHTML = "<br>";
   
           data.sessions.forEach(session => {
