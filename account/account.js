@@ -285,7 +285,7 @@ function removeGoogleLinkedParam() {
           data.sessions.forEach(session => {
               const li = document.createElement("li");
               li.innerHTML = `
-                  <br><br> <strong>Device:</strong> ${session.device_info} <br>
+                  <strong>Device:</strong> ${session.device_info} <br>
                   <strong>Location:</strong> ${session.location || "Unknown Location"} <br>
                   <strong>Last Login:</strong> ${new Date(session.login_time).toLocaleString()} 
                   <button onclick="revokeSession(${session.id})">Revoke</button>
@@ -304,19 +304,25 @@ function removeGoogleLinkedParam() {
     
   });
   
-  function revokeSession(sessionId) {
-    const token = localStorage.getItem('authToken');
+  function revokeSession(sessionId, sessionToken) {
+    const currentToken = localStorage.getItem("authToken");
     fetch('https://a1dos-login.onrender.com/revoke-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token, sessionId })
+      body: JSON.stringify({ token: currentToken, sessionId })
     })
     .then(res => res.json())
     .then(data => {
       if (data.success) {
         alert("Session revoked successfully.");
-        document.getElementById('toggleDevicesBtn').click(); 
-        document.getElementById('toggleDevicesBtn').click();
+        if (sessionToken === currentToken) {
+          localStorage.removeItem("authToken");
+          localStorage.removeItem("user");
+          localStorage.removeItem("googleLinked");
+          window.location.href = "./auth.html";
+        } else {
+          loadUserSessions();
+        }
       } else {
         alert("Failed to revoke session: " + data.message);
       }
@@ -324,4 +330,55 @@ function removeGoogleLinkedParam() {
     .catch(err => console.error("Error revoking session:", err));
   }
   
+import jwtDecode from 'jwt-decode';
+
+document.addEventListener("DOMContentLoaded", () => {
+  const token = localStorage.getItem('authToken');
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      const expiry = decoded.exp * 1000;
+      if (Date.now() > expiry) {
+        alert("Your session has expired. Please log in again.");
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("user");
+        localStorage.removeItem("googleLinked");
+        window.location.href = "./account/auth.html";
+        return;
+      }
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      window.location.href = "./account/auth.html";
+      return;
+    }
+  } else {
+    window.location.href = "./account/auth.html";
+    return;
+  }
+});
+
+fetch('https://a1dos-login.onrender.com/verify-token', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ token })
+})
+.then(response => {
+  if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error("Session expired. Please log in again.");
+    }
+    throw new Error("HTTP error " + response.status);
+  }
+  return response.json();
+})
+.then(data => {
+})
+.catch(err => {
+  alert(err.message);
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("user");
+  localStorage.removeItem("googleLinked");
+  window.location.href = "./account/auth.html";
+});
+
   
