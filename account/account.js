@@ -314,7 +314,8 @@ function removeGoogleLinkedParam() {
     .then(res => res.json())
     .then(data => {
       if (data.success) {
-        alert("Session revoked successfully.");
+        showMessage("Session revoked successfully.", "green");
+        setTimeout(() => showMessage(' ', 'black'), 3000);
         if (sessionToken === currentToken) {
           localStorage.removeItem("authToken");
           localStorage.removeItem("user");
@@ -324,7 +325,8 @@ function removeGoogleLinkedParam() {
           loadUserSessions();
         }
       } else {
-        alert("Failed to revoke session: " + data.message);
+        showMessage("Failed to revoke session: " + data.message, "red");
+        setTimeout(() => showMessage(' ', 'black'), 3000);
       }
     })
     .catch(err => console.error("Error revoking session:", err));
@@ -339,7 +341,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const decoded = jwtDecode(token);
       const expiry = decoded.exp * 1000;
       if (Date.now() > expiry) {
-        alert("Your session has expired. Please log in again.");
+        showMessage("Your session has expired. Please log in again.", "red");
+        setTimeout(() => showMessage(' ', 'black'), 3000);
         localStorage.removeItem("authToken");
         localStorage.removeItem("user");
         localStorage.removeItem("googleLinked");
@@ -374,7 +377,8 @@ fetch('https://a1dos-login.onrender.com/verify-token', {
 .then(data => {
 })
 .catch(err => {
-  alert(err.message);
+  showMessage(err.message, "red");
+  setTimeout(() => showMessage(' ', 'black'), 3000);
   localStorage.removeItem("authToken");
   localStorage.removeItem("user");
   localStorage.removeItem("googleLinked");
