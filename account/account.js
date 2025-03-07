@@ -311,52 +311,44 @@ function removeGoogleLinkedParam() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: currentToken, sessionId })
     })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        showMessage("Session revoked successfully.", "green");
-        setTimeout(() => showMessage(' ', 'black'), 3000);
-        if (sessionToken === currentToken) {
-          localStorage.removeItem("authToken");
-          localStorage.removeItem("user");
-          localStorage.removeItem("googleLinked");
-          window.location.href = "./auth.html";
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert("Session revoked successfully.");
+          if (sessionToken === currentToken) {
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("user");
+            localStorage.removeItem("googleLinked");
+            window.location.href = "./auth.html";
+          } else {
+            loadUserSessions();
+          }
         } else {
-          loadUserSessions();
+          alert("Failed to revoke session: " + data.message);
         }
-      } else {
-        showMessage("Failed to revoke session: " + data.message, "red");
-        setTimeout(() => showMessage(' ', 'black'), 3000);
-      }
-    })
-    .catch(err => console.error("Error revoking session:", err));
+      })
+      .catch(err => console.error("Error revoking session:", err));
   }
   
-import jwtDecode from 'jwt-decode';
-
+  
 document.addEventListener("DOMContentLoaded", () => {
-  const token = localStorage.getItem('authToken');
+  const token = localStorage.getItem("authToken");
+  
   if (token) {
     try {
-      const decoded = jwtDecode(token);
+      const decoded = jwt_decode(token); 
       const expiry = decoded.exp * 1000;
       if (Date.now() > expiry) {
-        showMessage("Your session has expired. Please log in again.", "red");
-        setTimeout(() => showMessage(' ', 'black'), 3000);
+        alert("Your session has expired. Please log in again.");
         localStorage.removeItem("authToken");
-        localStorage.removeItem("user");
-        localStorage.removeItem("googleLinked");
         window.location.href = "./account/auth.html";
-        return;
       }
     } catch (error) {
       console.error("Error decoding token:", error);
       window.location.href = "./account/auth.html";
-      return;
     }
   } else {
     window.location.href = "./account/auth.html";
-    return;
   }
 });
 
