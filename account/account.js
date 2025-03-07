@@ -339,6 +339,13 @@ function removeGoogleLinkedParam() {
   
     
   });
+
+  function showMessage(msg, color = 'black') {
+    const message = document.getElementById('message');
+    message.textContent = msg;
+    message.style.color = color;
+    message.style.display = msg.trim() ? 'block' : 'none';
+  }
   
   function revokeSession(sessionId, sessionToken) {
     const currentToken = localStorage.getItem("authToken");
