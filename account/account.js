@@ -348,7 +348,7 @@ function removeGoogleLinkedParam() {
   }
   
   function revokeSession(sessionId, sessionToken) {
-    const currentToken = localStorage.getItem("authToken");
+    const currentToken = localStorage.getItem("authToken"); // Throws error. Fix this.
     fetch('https://a1dos-login.onrender.com/revoke-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
