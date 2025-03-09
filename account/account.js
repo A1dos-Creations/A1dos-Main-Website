@@ -38,7 +38,7 @@ function removeGoogleLinkedParam() {
       const decoded = jwt_decode(token);
       const expiry = decoded.exp * 1000;
       if (Date.now() > expiry) {
-        alert("Your session has expired. Please log in again.");
+        showMessage("Your session has expired. Please log in again.", "red");
         localStorage.clear();
         window.location.href = "./auth.html";
         return;
@@ -48,7 +48,7 @@ function removeGoogleLinkedParam() {
       window.location.href = "./auth.html";
       return;
     }
-    
+
     function startTokenValidityPolling() {
       setInterval(() => {
         const token = localStorage.getItem('authToken');
