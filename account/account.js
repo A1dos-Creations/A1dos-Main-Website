@@ -1,427 +1,224 @@
 function removeGoogleLinkedParam() {
-    const url = new URL(window.location);
-    url.searchParams.delete("googleLinked");
-    window.history.replaceState({}, document.title, url.pathname);
-  }
-  
-  document.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('authToken');
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-  
-    const accountInfoDiv = document.getElementById('accountInfo');
-    const googleLinkBtn = document.getElementById('google-link-btn');
-    const googleLinkBtnTxt = document.getElementById('google-link-btn-text');
-    const googleStatus = document.getElementById('google-status');
-    const emailToggle = document.getElementById('emailToggle');
-    const toggleLabel = document.getElementById('toggleLabel');
-    const logoutBtn = document.getElementById("logout-btn");
-    const hidden = document.getElementById('about');
-    const showbtn = document.getElementById('aboutHvr');
-  
-    if (showbtn && hidden) {
-      showbtn.addEventListener('mouseover', () => {
-        hidden.style.display = 'block';
-      });
-      showbtn.addEventListener('mouseout', () => {
-        hidden.style.display = 'none';
-      });
-    }
-  
-    function showMessage(msg, color = 'black') {
-      const message = document.getElementById('message');
-      message.textContent = msg;
-      message.style.color = color;
-      message.style.display = msg.trim() ? 'block' : 'none';
-    }
-  
-    if (user && user.email) {
-      const createdAt = user.created_at ? new Date(user.created_at).toLocaleString() : "Unknown";
-      accountInfoDiv.innerHTML = `
-        <p><strong>Email:</strong> ${user.email}</p>
-        <p><strong>Account Created:</strong> ${createdAt}</p>
-        <p><strong>Name:</strong> ${user.name}</p>
-      `;
-    } else {
-      accountInfoDiv.innerHTML = "<p>User data not available. Please log in.</p>";
-      window.location.href = "./auth";
-    }
-  
-    if (emailToggle && toggleLabel) {
-      if (user.email_notifications === false) {
-        emailToggle.checked = false;
-        toggleLabel.textContent = "Disabled";
-      } else {
-        emailToggle.checked = true;
-        toggleLabel.textContent = "Enabled";
-      }
-      emailToggle.addEventListener('change', () => {
-        const newPreference = emailToggle.checked;
-        toggleLabel.textContent = newPreference ? "Enabled" : "Disabled";
-        if (!token) {
-          showMessage("Session expired. Please log in again.", 'red');
-          return;
-        }
-        fetch("https://a1dos-login.onrender.com/update-notifications", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token, emailNotifications: newPreference }),
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            showMessage("Notification preferences updated.", 'green');
-            user.email_notifications = newPreference;
-            localStorage.setItem("user", JSON.stringify(user));
-          } else {
-            showMessage("Failed to update preferences: " + data.message, 'red');
-          }
-        })
-        .catch(err => console.error("Error updating preferences:", err));
-      });
-    }
-  
-    const urlParams = new URLSearchParams(window.location.search);
-    let googleLinked = urlParams.get('googleLinked') === 'true';
-    if (googleLinked) {
-      googleStatus.textContent = "Google Account Linked ✅";
-      showMessage("Google account linked successfully! ✅", 'green');
-      setTimeout(() => showMessage(' ', 'black'), 4000);
-      removeGoogleLinkedParam();
-    }
-  
-    function updateGoogleButton() {
-      if (googleLinked) {
-        googleLinkBtnTxt.textContent = "Unlink Google Account";
-        googleLinkBtn.onclick = unlinkGoogleHandler;
-      } else {
-        googleLinkBtnTxt.textContent = "Link Google Account";
-        googleLinkBtn.onclick = linkGoogleHandler;
-      }
-    }
-  
-    function linkGoogleHandler() {
-      if (!token) {
-        showMessage("Please log in first.", 'red');
-        setTimeout(() => showMessage(' ', 'black'), 3000);
-        return;
-      }
-      fetch('https://a1dos-login.onrender.com/verify-token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token }),
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.valid) {
-          const userId = data.user.id;
-          window.location.href = `https://a1dos-login.onrender.com/auth/google?state=${userId}`;
-        } else {
-          showMessage("Session expired. Please log in again.", 'red');
-          setTimeout(() => showMessage(' ', 'black'), 3000);
-        }
-      })
-      .catch(err => console.error("Error verifying token:", err));
-    }
-  
-    function unlinkGoogleHandler() {
-      const token = localStorage.getItem("authToken"); 
-      if (!token) {
-        showMessage("Session expired. Please log in again.", 'red');
-        setTimeout(() => showMessage(' ', 'black'), 3000);
-        return;
-      }
-      fetch("https://a1dos-login.onrender.com/unlink-google", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token }),
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          showMessage("Google account unlinked successfully.", 'green');
-          setTimeout(() => showMessage(' ', 'black'), window.location.href = "account.html", 3000);
-          googleLinked = false;
-          googleStatus.textContent = "Google Account Not Linked ❌";
-          localStorage.removeItem("googleLinked");
-          updateGoogleButton();
-        } else {
-          showMessage("Error unlinking Google: " + data.message, 'red');
-        }
-      })
-      .catch(err => console.error("Error unlinking Google:", err));
-    }
-  
-    if (logoutBtn) {
-      logoutBtn.addEventListener("click", () => {
-        logoutUser();
-      });
-    }
-    
-    function logoutUser() {
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("user");
-      localStorage.removeItem("googleLinked");    
-      window.location.href = "auth";
-    }
+  const url = new URL(window.location);
+  url.searchParams.delete("googleLinked");
+  window.history.replaceState({}, document.title, url.pathname);
+}
 
-    const stripe = Stripe('pk_live_51QzQdOG1SPsRBHogtiBFwbebzV9JmhES0R4ZZGjHABPcEvnpGZaFDGlDONzPMz0gNMn664g1fcfhrUYpaUv4We7o00QsWelAuT');
-    
+document.addEventListener('DOMContentLoaded', () => {
+  const token = localStorage.getItem('authToken');
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-    document.getElementById('upgrade-button').addEventListener('click', () => {
-      fetch('https://a1dos-login.onrender.com/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token }),
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.valid) {
-          const userId = data.user.id;
-          return stripe.redirectToCheckout({ sessionId: data.id });
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        return stripe.redirectToCheckout({ sessionId: data.id });
-      })
-      .then(result => {
-        if (result.error) {
-          console.error(result.error.message);
-        }
-      })
-      .catch(error => {
-        console.error('Error creating checkout session:', error);
-      });
-    });
-
-    const sendCodeBtn = document.getElementById('sendCodeBtn');
-    const passwordForm = document.getElementById('passwordForm');
-    const showForm = document.getElementById('showForm');
-    const pswDiv = document.getElementById('resetPswPopup');
-
-    showForm.addEventListener('click', () => {
-      if(pswDiv.style.display === 'block') {
-          pswDiv.style.display = 'none';
-      } else {
-        pswDiv.style.display = 'block';
-      }
-    });
-
-    function showMessagePsw(msg, color = 'black') {
-      const message = document.getElementById('pswAlert');
-      message.textContent = msg;
-      message.style.color = color;
-      message.style.display = msg.trim() ? 'block' : 'none';
-    }
-
-    sendCodeBtn.addEventListener('click', () => {
-        const email = document.getElementById('email').value.trim();
-        fetch('https://a1dos-login.onrender.com/send-verification-code', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email }),
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                showMessagePsw("Verification code sent to your email.", 'green');
-                setTimeout(() => showMessagePsw(' ', 'black'), 3000);
-            } else {
-                showMessagePsw(data.message, "red");
-                setTimeout(() => showMessagePsw(' ', 'black'), 3000);
-            }
-        })
-        .catch(err => console.error('Error sending verification code:', err));
-    });
-
-    passwordForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('email').value.trim();
-        const verificationCode = document.getElementById('verificationCode').value.trim();
-        const newPassword = document.getElementById('newPassword').value.trim();
-
-        fetch('https://a1dos-login.onrender.com/update-password', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, verificationCode, newPassword }),
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                showMessage("Password changed successfully.", 'green');
-                setTimeout(() => showMessage(' ', 'black'), 3000);
-                pswDiv.style.display = 'none';
-            } else {
-                showMessagePsw(data.message, 'red');
-                setTimeout(() => showMessagePsw(' ', 'black'), 3000);
-            }
-        })
-        .catch(err => console.error('Error updating password:', err));
-    });
-
-    
-  
-    updateGoogleButton();
-  });
-
-
-  function loadUserSessions() {
-    fetch("https://a1dos-login.onrender.com/get-user-sessions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token })
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-          const deviceList = document.getElementById("deviceList");
-          console.log("Device list element:", deviceList);
-          if (!deviceList) {
-            console.error("No element with id 'deviceList' found in the DOM.");
-          }
-          deviceList.innerHTML = "<br>";
-  
-          data.sessions.forEach(session => {
-              const li = document.createElement("li");
-              li.innerHTML = `
-                  <strong>Device:</strong> ${session.device_info} <br>
-                  <strong>Location:</strong> ${session.location || "Unknown Location"} <br>
-                  <strong>Last Login:</strong> ${new Date(session.login_time).toLocaleString()} 
-                  <button onclick="revokeSession(${session.id})">Revoke</button>
-                  <br>
-              `;
-              deviceList.appendChild(li);
-          });
-  
-          deviceList.style.display = "block";
-      } else {
-          deviceList.innerHTML = "<li>No sessions found.</li>";
-      } 
-     })
-      .catch(err => console.error("Error fetching sessions:", err));
-  }
-  document.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('authToken');
-  
-    fetch("https://a1dos-login.onrender.com/get-user-sessions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token })
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-          const deviceList = document.getElementById("deviceList");
-          console.log("Device list element:", deviceList);
-          if (!deviceList) {
-            console.error("No element with id 'deviceList' found in the DOM.");
-          }
-          deviceList.innerHTML = "<br>";
-  
-          data.sessions.forEach(session => {
-              const li = document.createElement("li");
-              li.innerHTML = `
-                  <strong>Device:</strong> ${session.device_info} <br>
-                  <strong>Location:</strong> ${session.location || "Unknown Location"} <br>
-                  <strong>Last Login:</strong> ${new Date(session.login_time).toLocaleString()} 
-                  <button onclick="revokeSession(${session.id})">Revoke</button>
-                  <br>
-              `;
-              deviceList.appendChild(li);
-          });
-  
-          deviceList.style.display = "block";
-      } else {
-          deviceList.innerHTML = "<li>No sessions found.</li>";
-      }
-  })
-  .catch(err => console.error("Error fetching sessions:", err));
-  
-    
-  });
+  let googleLinked = localStorage.getItem('googleLinked') === 'true'; // Get Google linked status from localStorage
+  const accountInfoDiv = document.getElementById('accountInfo');
+  const googleLinkBtn = document.getElementById('google-link-btn');
+  const googleLinkBtnTxt = document.getElementById('google-link-btn-text');
+  const googleStatus = document.getElementById('google-status');
+  const emailToggle = document.getElementById('emailToggle');
+  const toggleLabel = document.getElementById('toggleLabel');
+  const logoutBtn = document.getElementById("logout-btn");
+  const deviceList = document.getElementById("deviceList");
+  const messageEl = document.getElementById("message");
 
   function showMessage(msg, color = 'black') {
-    const message = document.getElementById('message');
-    message.textContent = msg;
-    message.style.color = color;
-    message.style.display = msg.trim() ? 'block' : 'none';
+      messageEl.textContent = msg;
+      messageEl.style.color = color;
+      messageEl.style.display = msg.trim() ? 'block' : 'none';
   }
-  
-  function revokeSession(sessionId, sessionToken) {
-    const currentToken = localStorage.getItem("authToken"); // Throws error. Fix this.
-    fetch('https://a1dos-login.onrender.com/revoke-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: currentToken, sessionId })
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          showMessage("Session revoked successfully.", "green");
-          setTimeout(() => showMessage(' ', 'black'), 3000);
 
-          if (sessionToken === currentToken) {
-            localStorage.removeItem("authToken");
-            localStorage.removeItem("user");
-            localStorage.removeItem("googleLinked");
-            window.location.href = "./auth.html";
-          } else {
-            loadUserSessions();
-          }
-        } else {
-          showMessage("Failed to revoke session: " + data.message, "red");
-          setTimeout(() => showMessage(' ', 'black'), 3000);
+  const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.get('googleLinked') === 'true'){
+        localStorage.setItem('googleLinked', 'true');
+    }
 
-        }
-      })
-      .catch(err => console.error("Error revoking session:", err));
+    if (!token) {
+      window.location.href = "./auth.html";
+      return;
   }
-  
-  
-document.addEventListener("DOMContentLoaded", () => {
-  const token = localStorage.getItem("authToken");
-  
-  if (token) {
-    try {
-      const decoded = jwt_decode(token); 
+
+  try {
+      const decoded = jwt_decode(token);
       const expiry = decoded.exp * 1000;
       if (Date.now() > expiry) {
-        alert("Your session has expired. Please log in again.");
-        localStorage.removeItem("authToken");
-        window.location.href = "./auth.html";
+          alert("Your session has expired. Please log in again.");
+          localStorage.clear();
+          window.location.href = "./auth.html";
+          return;
       }
-    } catch (error) {
+  } catch (error) {
       console.error("Error decoding token:", error);
       window.location.href = "./auth.html";
-    }
+      return;
+  }
+
+  if (user.email) {
+      const createdAt = user.created_at ? new Date(user.created_at).toLocaleString() : "Unknown";
+      accountInfoDiv.innerHTML = `
+          <p><strong>Email:</strong> ${user.email}</p>
+          <p><strong>Account Created:</strong> ${createdAt}</p>
+          <p><strong>Name:</strong> ${user.name}</p>
+      `;
   } else {
-    window.location.href = "./auth.html";
+      accountInfoDiv.innerHTML = "<p>User data not available. Please log in.</p>";
+      window.location.href = "./auth.html";
+      return;
   }
-});
 
-fetch('https://a1dos-login.onrender.com/verify-token', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ token })
-})
-.then(response => {
-  if (!response.ok) {
-    if (response.status === 401) {
-      throw new Error("Session expired. Please log in again.");
-    }
-    throw new Error("HTTP error " + response.status);
+  if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+          localStorage.clear();
+          window.location.href = "./auth.html";
+      });
   }
-  return response.json();
-})
-.then(data => {
-})
-.catch(err => {
-  showMessage(err.message, "red");
-  setTimeout(() => showMessage(' ', 'black'), 3000);
-  localStorage.removeItem("authToken");
-  localStorage.removeItem("user");
-  localStorage.removeItem("googleLinked");
-  window.location.href = "./account/auth.html";
-});
 
-  
+  if (emailToggle && toggleLabel) {
+      emailToggle.checked = (user.email_notifications !== false);
+      toggleLabel.textContent = emailToggle.checked ? "Enabled" : "Disabled";
+      emailToggle.addEventListener('change', () => {
+          const newPreference = emailToggle.checked;
+          toggleLabel.textContent = newPreference ? "Enabled" : "Disabled";
+          fetch("https://a1dos-login.onrender.com/update-notifications", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ token, emailNotifications: newPreference })
+          })
+          .then(res => res.json())
+          .then(data => {
+              if (data.success) {
+                  user.email_notifications = newPreference;
+                  localStorage.setItem("user", JSON.stringify(user));
+                  showMessage("Notification preferences updated.", 'green');
+              } else {
+                  showMessage("Failed to update preferences: " + data.message, 'red');
+              }
+          })
+          .catch(err => console.error("Error updating preferences:", err));
+      });
+  }
+
+  function updateGoogleButton() {
+    googleLinkBtnTxt.textContent = googleLinked ? "Unlink Google Account" : "Link Google Account";
+    googleLinkBtn.onclick = googleLinked ? unlinkGoogleHandler : linkGoogleHandler;
+    googleStatus.textContent = googleLinked ? "Google Account Linked ✅" : "Google Account Not Linked ❌";
+}
+
+function linkGoogleHandler() {
+    fetch('https://a1dos-login.onrender.com/verify-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.valid) {
+            const userId = data.user.id;
+            window.location.href = `https://a1dos-login.onrender.com/auth/google?state=${userId}`;
+        } else {
+            showMessage("Session expired. Please log in again.", 'red');
+            setTimeout(() => showMessage(' ', 'black'), 3000);
+        }
+    })
+    .catch(err => console.error("Error verifying token:", err));
+}
+
+
+function unlinkGoogleHandler() {
+    fetch("https://a1dos-login.onrender.com/unlink-google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            localStorage.setItem('googleLinked', 'false');
+            googleLinked = false;
+            updateGoogleButton();
+            showMessage("Google account unlinked.", 'green');
+        }
+    })
+    .catch(err => console.error("Error unlinking Google:", err));
+}
+
+
+function checkGoogleLinkStatus() {
+  fetch('https://a1dos-login.onrender.com/check-google-link', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token })
+  })
+  .then(res => res.json())
+  .then(data => {
+      googleLinked = data.linked;
+      localStorage.setItem('googleLinked', data.linked ? 'true' : 'false');
+      updateGoogleButton();
+  })
+  .catch(err => console.error("Error checking Google link status:", err));
+}
+
+
+updateGoogleButton();
+
+checkGoogleLinkStatus();
+
+  // Device sessions: revoke session and load sessions
+  window.revokeSession = function(sessionId, sessionToken) {
+      fetch('https://a1dos-login.onrender.com/revoke-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, sessionId })
+      })
+      .then(res => res.json())
+      .then(data => {
+          if (data.success) {
+              showMessage("Session revoked successfully.", "green");
+              loadUserSessions(); // Refresh session list immediately
+              if (sessionToken === token) {
+                  localStorage.clear();
+                  window.location.href = "./auth.html";
+              }
+          } else {
+              showMessage("Failed to revoke session: " + data.message, "red");
+          }
+      })
+      .catch(err => console.error("Error revoking session:", err));
+  };
+
+  function filterDuplicateSessions(sessions) {
+      const seen = {};
+      return sessions.filter(session => {
+          const key = `${session.device_info}-${session.location}`;
+          if (seen[key]) return false;
+          seen[key] = true;
+          return true;
+      });
+  }
+
+  function loadUserSessions() {
+      fetch("https://a1dos-login.onrender.com/get-user-sessions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token })
+      })
+      .then(res => res.json())
+      .then(data => {
+          if (data.success) {
+              deviceList.innerHTML = "<br>";
+              const uniqueSessions = filterDuplicateSessions(data.sessions);
+              uniqueSessions.forEach(session => {
+                  const li = document.createElement("li");
+                  li.innerHTML = `
+                      <strong>Device:</strong> ${session.device_info} <br>
+                      <strong>Location:</strong> ${session.location || "Unknown Location"} <br>
+                      <strong>Last Login:</strong> ${new Date(session.login_time).toLocaleString()} <br>\n                        <button onclick="revokeSession(${session.id}, '${session.session_token}')\">Revoke</button><br>\n                    `;
+                  deviceList.appendChild(li);
+              });
+              deviceList.style.display = "block";
+          } else {
+              deviceList.innerHTML = "<li>No sessions found.</li>";
+          }
+      })
+      .catch(err => console.error("Error fetching sessions:", err));
+  }
+
+  loadUserSessions();
+});

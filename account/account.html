@@ -24,6 +24,38 @@
         <button id="hm7235897g7">Home</button>
     </a>
 
+    <div id="w75891g7">
+        <img src="/error.png" alt="Error Icon" id="infoIcon">
+        <h2 class="header3">Temporary Service Outage</h2>
+        <p id="parg10351781">Our Google and some sign-in services are down. Please allow up to 1 week for our services to be back up. Thank you! <i>March 8, 7:31pm</i></p>
+        <div id="api-status" class="para1">Checking Sign-in API status...</div>
+        <script>
+        function checkApiStatus() {
+            fetch('https://a1dos-login.onrender.com/health')
+            .then(response => response.json())
+            .then(data => {
+                const statusEl = document.getElementById('api-status');
+                if (data.status === "ok") {
+                statusEl.textContent = "API Status: Online (last checked: " + new Date(data.timestamp).toLocaleTimeString() + ")";
+                statusEl.style.color = "green";
+                } else {
+                statusEl.textContent = "API Status: Offline";
+                statusEl.style.color = "red";
+                }
+            })
+            .catch(err => {
+                const statusEl = document.getElementById('api-status');
+                statusEl.textContent = "API Status: Offline";
+                statusEl.style.color = "red";
+                console.error("Error fetching API status:", err);
+            });
+        }
+        
+        checkApiStatus();
+        setInterval(checkApiStatus, 30000);
+        </script>
+    </div>
+
     <div id="i51703n295b">
         <img src="/info.png" alt="Info Icon" id="infoIcon">
         <h2 class="header3">Verification in Progress</h2>
@@ -36,6 +68,7 @@
     
     <div id="av571v3">
         <h2 class="header2" style="margin-bottom: -0px;">Account Info: (A1dos Account)</h2>
+        <img>
         <button style="background-color: transparent;border-style: none;margin-top: -6px;margin-left: 370px;" id="showForm">
             <img src="./edit.png" alt="Edit Icon" class="icon">
         </button>
