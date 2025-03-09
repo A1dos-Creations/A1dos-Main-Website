@@ -5,17 +5,14 @@ function removeGoogleLinkedParam() {
   }
   
   document.addEventListener('DOMContentLoaded', () => {
-    // Get token and user from localStorage
     const token = localStorage.getItem('authToken');
     const user = JSON.parse(localStorage.getItem("user") || "{}");
   
-    // Determine Google linked status from localStorage and URL parameter
     if (new URLSearchParams(window.location.search).get('googleLinked') === 'true') {
       localStorage.setItem('googleLinked', 'true');
     }
     let googleLinked = localStorage.getItem('googleLinked') === 'true';
   
-    // Get DOM elements
     const accountInfoDiv = document.getElementById('accountInfo');
     const googleLinkBtn = document.getElementById('google-link-btn');
     const googleLinkBtnTxt = document.getElementById('google-link-btn-text');
@@ -37,7 +34,6 @@ function removeGoogleLinkedParam() {
       return;
     }
   
-    // Check token expiry using jwt-decode
     try {
       const decoded = jwt_decode(token);
       const expiry = decoded.exp * 1000;
@@ -52,8 +48,37 @@ function removeGoogleLinkedParam() {
       window.location.href = "./auth.html";
       return;
     }
+    
+    function startTokenValidityPolling() {
+      setInterval(() => {
+        const token = localStorage.getItem('authToken');
+        if (!token) return;
+        fetch('https://a1dos-login.onrender.com/verify-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token })
+        })
+        .then(res => {
+          if (!res.ok) {
+            throw new Error("Token invalid or expired");
+          }
+          return res.json();
+        })
+        .then(data => {
+          if (!data.valid) {
+            throw new Error("Token invalid");
+          }
+        })
+        .catch(err => {
+          console.error("Token check failed:", err);
+          localStorage.clear();
+          window.location.href = "./auth.html";
+        });
+      }, 5000);
+    }
+
+    startTokenValidityPolling();
   
-    // Display account info
     if (user.email) {
       const createdAt = user.created_at ? new Date(user.created_at).toLocaleString() : "Unknown";
       accountInfoDiv.innerHTML = `
@@ -67,7 +92,6 @@ function removeGoogleLinkedParam() {
       return;
     }
   
-    // Logout functionality
     if (logoutBtn) {
       logoutBtn.addEventListener("click", () => {
         localStorage.clear();
@@ -75,7 +99,6 @@ function removeGoogleLinkedParam() {
       });
     }
   
-    // Email preferences toggle
     if (emailToggle && toggleLabel) {
       emailToggle.checked = (user.email_notifications !== false);
       toggleLabel.textContent = emailToggle.checked ? "Enabled" : "Disabled";
@@ -101,7 +124,6 @@ function removeGoogleLinkedParam() {
       });
     }
   
-    // Google linking functions
     function updateGoogleButton() {
         googleLinkBtnTxt.textContent = googleLinked ? "Unlink Google Account" : "Link Google Account";
         googleLinkBtn.onclick = googleLinked ? unlinkGoogleHandler : linkGoogleHandler;

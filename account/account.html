@@ -41,7 +41,7 @@
             })
             .catch(err => {
                 const statusEl = document.getElementById('api-status');
-                statusEl.textContent = "API Status: Offline";
+                statusEl.textContent = "Account API Status: Offline";
                 statusEl.style.color = "red";
                 console.error("Error fetching API status:", err);
             });
