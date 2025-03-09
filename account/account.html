@@ -24,12 +24,7 @@
     <a href="/index.html">
         <button id="hm7235897g7">Home</button>
     </a>
-
-    <div id="w75891g7">
-        <img src="/error.png" alt="Error Icon" id="infoIcon">
-        <h2 class="header3">Temporary Service Outage</h2>
-        <p id="parg10351781">Our Google and some sign-in services are down. Please allow up to 1 week for our services to be back up. Thank you! <i>March 8, 7:31pm</i></p>
-        <div id="api-status" class="para1">Checking Sign-in API status...</div>
+    <div id="api-status" class="para1">Checking Sign-in API status...</div>
         <script>
         function checkApiStatus() {
             fetch('https://a1dos-login.onrender.com/health')
@@ -55,6 +50,11 @@
         checkApiStatus();
         setInterval(checkApiStatus, 30000);
         </script>
+
+    <div id="w75891g7" style="display: none;">
+        <img src="/error.png" alt="Error Icon" id="infoIcon">
+        <h2 class="header3">Temporary Service Outage</h2>
+        <p id="parg10351781">Our Google and some sign-in services are down. Please allow up to 1 week for our services to be back up. Thank you! <i>March 8, 7:31pm</i></p>
     </div>
 
     <div id="i51703n295b">
