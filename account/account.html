@@ -32,10 +32,10 @@
             .then(data => {
                 const statusEl = document.getElementById('api-status');
                 if (data.status === "ok") {
-                statusEl.textContent = "API Status: Online (last checked: " + new Date(data.timestamp).toLocaleTimeString() + ")";
+                statusEl.textContent = "Account API Status: Online (last checked: " + new Date(data.timestamp).toLocaleTimeString() + ")";
                 statusEl.style.color = "green";
                 } else {
-                statusEl.textContent = "API Status: Offline";
+                statusEl.textContent = "Account API Status: Offline";
                 statusEl.style.color = "red";
                 }
             })
