@@ -1,7 +1,7 @@
 function removeGoogleLinkedParam() {
-  const url = new URL(window.location);
-  url.searchParams.delete("googleLinked");
-  window.history.replaceState({}, document.title, url.pathname);
+    const url = new URL(window.location);
+    url.searchParams.delete("googleLinked");
+    window.history.replaceState({}, document.title, url.pathname);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
     if(urlParams.get('googleLinked') === 'true'){
         localStorage.setItem('googleLinked', 'true');
+        removeGoogleLinkedParam();
     }
 
     if (!token) {
