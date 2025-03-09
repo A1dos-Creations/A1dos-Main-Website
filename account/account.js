@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
     if(urlParams.get('googleLinked') === 'true'){
         localStorage.setItem('googleLinked', 'true');
-        removeGoogleLinkedParam();
     }
 
     if (!token) {
