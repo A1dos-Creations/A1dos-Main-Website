@@ -5,6 +5,41 @@ function removeGoogleLinkedParam() {
   }
   
   document.addEventListener('DOMContentLoaded', () => {
+    const stripe = Stripe('pk_live_51QzQdOG1SPsRBHogtiBFwbebzV9JmhES0R4ZZGjHABPcEvnpGZaFDGlDONzPMz0gNMn664g1fcfhrUYpaUv4We7o00QsWelAuT');
+
+    document.getElementById('upgrade-button').addEventListener('click', () => {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        alert("You must be logged in to upgrade.");
+        return;
+      }
+      
+      fetch('https://a1dos-login.onrender.com/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.id) {
+          return stripe.redirectToCheckout({ sessionId: data.id });
+        } else {
+          throw new Error("Failed to create checkout session");
+        }
+      })
+      .then(result => {
+        if (result.error) {
+          console.error(result.error.message);
+          alert(result.error.message);
+        }
+      })
+      .catch(error => {
+        console.error("Error creating checkout session:", error);
+        alert("Error creating checkout session. Please try again.");
+      });
+    });
+
+
     const token = localStorage.getItem('authToken');
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 
