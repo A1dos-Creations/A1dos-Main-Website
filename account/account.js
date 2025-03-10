@@ -53,35 +53,36 @@ function removeGoogleLinkedParam() {
       return;
     }
 
-    function startTokenValidityPolling() {
-      setInterval(() => {
-        const token = localStorage.getItem('authToken');
-        if (!token) return;
-        fetch('https://a1dos-login.onrender.com/verify-token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token })
-        })
-        .then(res => {
-          if (!res.ok) {
-            throw new Error("Token invalid or expired");
+    function pollTokenValidity() {
+      const token = localStorage.getItem("authToken");
+      if (!token) return; 
+      
+      fetch("https://a1dos-login.onrender.com/verify-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token })
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Token invalid or session revoked");
           }
-          return res.json();
+          return response.json();
         })
         .then(data => {
           if (!data.valid) {
-            throw new Error("Token invalid");
+            console.log("Token invalid, logging out immediately.");
+            localStorage.clear();
+            window.location.href = "./auth.html";
           }
         })
         .catch(err => {
-          console.error("Token check failed:", err);
+          console.error("Token validity check failed:", err);
           localStorage.clear();
           window.location.href = "./auth.html";
         });
-      }, 5000);
     }
-
-    startTokenValidityPolling();
+    
+    setInterval(pollTokenValidity, 5000);
 
     const socket = new WebSocket('wss://a1dos-login.onrender.com');
 
