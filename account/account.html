@@ -103,7 +103,24 @@
 
       <script src="/redirect.js"></script>
 
-      <div id="resetPswPopup" style="opacity: 0; transform: scale(0.95); transition: opacity 0.5s ease, transform 0.5s ease; display: none;">
+      <style>
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.3);
+                display: none;
+                z-index: 9998;
+                backdrop-filter: blur(8px);
+                transition: opacity 0.4s ease, backdrop-filter 0.4s ease;
+            }
+      </style>
+
+      <div id="overlay" class="overlay"></div>
+
+      <div id="resetPswPopup" style="opacity: 0; transform: scale(0.95); transition: opacity 0.5s ease, transform 0.5s ease; display: none;z-index: 9999;">
         <p id="pswAlert"></p>
         <form id="passwordForm">
             <h1 class="header2" style="margin-left: -40px;">Reset Password</h1>

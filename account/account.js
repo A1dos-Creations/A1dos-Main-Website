@@ -253,29 +253,49 @@ function removeResetPswParam() {
     const passwordForm = document.getElementById('passwordForm');
     const showForm = document.getElementById('showForm');
     const pswDiv = document.getElementById('resetPswPopup');
+    const overlay = document.getElementById('overlay');
 
     let isOpen = false;
 
     if (new URLSearchParams(window.location.search).get('resetPsw') === 'true') {
-      pswDiv.style.display = 'block';
-      removeResetPswParam()
+      toggleDiv();
+      removeResetPswParam();
     }
 
     function toggleDiv() {
       if (isOpen) {
-        pswDiv.style.opacity = "0";
-        pswDiv.style.transform = "scale(0.95)";
-        setTimeout(() => {
-          pswDiv.style.display = "none";
-        }, 500);
+        hideDiv();
       } else {
-        pswDiv.style.display = "block";
-        void myDiv.offsetWidth; 
-        pswDiv.style.opacity = "1";
-        pswDiv.style.transform = "scale(1)";
+        showDiv();
       }
-      isOpen = !isOpen;
     }
+
+    function showDiv() {
+      pswDiv.style.display = "block";
+      overlay.style.display = "block"; 
+      void pswDiv.offsetWidth;
+      pswDiv.style.opacity = "1";
+      pswDiv.style.transform = "scale(1)";
+      overlay.style.opacity = "1";
+      overlay.style.backdropFilter = "blur(8px)";
+      isOpen = true;
+    }
+
+    function hideDiv() {
+      pswDiv.style.opacity = "0";
+      pswDiv.style.transform = "scale(0.95)";
+      overlay.style.opacity = "0";
+      overlay.style.backdropFilter = "blur(1px)";
+      setTimeout(() => {
+        pswDiv.style.display = "none";
+        overlay.style.display = "none";
+      }, 400);
+      isOpen = false;
+    }
+
+    overlay.addEventListener("click", () => {
+      if (isOpen) hideDiv();
+    });
 
     showForm.addEventListener('click', () => {
       if(pswDiv.style.display === 'block') {
