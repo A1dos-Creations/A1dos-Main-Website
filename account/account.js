@@ -1,8 +1,13 @@
 function removeGoogleLinkedParam() {
-    const url = new URL(window.location);
-    url.searchParams.delete("googleLinked");
-    window.history.replaceState({}, document.title, url.pathname);
-  }
+  const url = new URL(window.location);
+  url.searchParams.delete("googleLinked");
+  window.history.replaceState({}, document.title, url.pathname);
+}
+function removeResetPswParam() {
+  const url = new URL(window.location);
+  url.searchParams.delete("resetPsw");
+  window.history.replaceState({}, document.title, url.pathname);
+}
   
   document.addEventListener('DOMContentLoaded', () => {
     const stripe = Stripe('pk_live_51QzQdOG1SPsRBHogtiBFwbebzV9JmhES0R4ZZGjHABPcEvnpGZaFDGlDONzPMz0gNMn664g1fcfhrUYpaUv4We7o00QsWelAuT');
@@ -42,10 +47,6 @@ function removeGoogleLinkedParam() {
 
     const token = localStorage.getItem('authToken');
     const user = JSON.parse(localStorage.getItem("user") || "{}");
-
-    if (new URLSearchParams(window.location.search).get('resetPsw') === 'true') {
-      
-    }
   
     if (new URLSearchParams(window.location.search).get('googleLinked') === 'true') {
       localStorage.setItem('googleLinked', 'true');
@@ -247,6 +248,69 @@ function removeGoogleLinkedParam() {
     setTimeout(() => {
         checkGoogleLinkStatus();
     }, 2000);
+
+    const sendCodeBtn = document.getElementById('sendCodeBtn');
+    const passwordForm = document.getElementById('passwordForm');
+    const showForm = document.getElementById('showForm');
+    const pswDiv = document.getElementById('resetPswPopup');
+
+    if (new URLSearchParams(window.location.search).get('resetPsw') === 'true') {
+      pswDiv.style.display = 'block';
+      removeResetPswParam()
+    }
+
+    showForm.addEventListener('click', () => {
+      if(pswDiv.style.display === 'block') {
+          pswDiv.style.display = 'none';
+      } else {
+        pswDiv.style.display = 'block';
+      }
+    });
+
+    sendCodeBtn.addEventListener('click', () => {
+        const email = document.getElementById('email').value.trim();
+        fetch('https://a1dos-login.onrender.com/send-verification-code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                showMessagePsw("Verification code sent to your email.", 'green');
+                setTimeout(() => showMessagePsw(' ', 'black'), 3000);
+            } else {
+                showMessagePsw(data.message, "red");
+                setTimeout(() => showMessagePsw(' ', 'black'), 3000);
+            }
+        })
+        .catch(err => console.error('Error sending verification code:', err));
+    });
+
+    passwordForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const verificationCode = document.getElementById('verificationCode').value.trim();
+        const newPassword = document.getElementById('newPassword').value.trim();
+
+        fetch('https://a1dos-login.onrender.com/update-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, verificationCode, newPassword }),
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                showMessage("Password changed successfully.", 'green');
+                setTimeout(() => showMessage(' ', 'black'), 3000);
+                pswDiv.style.display = 'none';
+            } else {
+                showMessagePsw(data.message, 'red');
+                setTimeout(() => showMessagePsw(' ', 'black'), 3000);
+            }
+        })
+        .catch(err => console.error('Error updating password:', err));
+    });
     
     // Device sessions: load sessions and revoke session functions
     window.revokeSession = function(sessionId, sessionToken) {
