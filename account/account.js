@@ -254,16 +254,34 @@ function removeResetPswParam() {
     const showForm = document.getElementById('showForm');
     const pswDiv = document.getElementById('resetPswPopup');
 
+    let isOpen = false;
+
     if (new URLSearchParams(window.location.search).get('resetPsw') === 'true') {
       pswDiv.style.display = 'block';
       removeResetPswParam()
     }
 
+    function toggleDiv() {
+      if (isOpen) {
+        pswDiv.style.opacity = "0";
+        pswDiv.style.transform = "scale(0.95)";
+        setTimeout(() => {
+          pswDiv.style.display = "none";
+        }, 500);
+      } else {
+        pswDiv.style.display = "block";
+        void myDiv.offsetWidth; 
+        pswDiv.style.opacity = "1";
+        pswDiv.style.transform = "scale(1)";
+      }
+      isOpen = !isOpen;
+    }
+
     showForm.addEventListener('click', () => {
       if(pswDiv.style.display === 'block') {
-          pswDiv.style.display = 'none';
+        toggleDiv()
       } else {
-        pswDiv.style.display = 'block';
+        toggleDiv()
       }
     });
 
