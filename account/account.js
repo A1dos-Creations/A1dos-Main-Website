@@ -8,6 +8,11 @@ function removeResetPswParam() {
   url.searchParams.delete("resetPsw");
   window.history.replaceState({}, document.title, url.pathname);
 }
+function removeResetEmlParam() {
+  const url = new URL(window.location);
+  url.searchParams.delete("resetEml");
+  window.history.replaceState({}, document.title, url.pathname);
+}
   
   document.addEventListener('DOMContentLoaded', () => {
     const stripe = Stripe('pk_live_51QzQdOG1SPsRBHogtiBFwbebzV9JmhES0R4ZZGjHABPcEvnpGZaFDGlDONzPMz0gNMn664g1fcfhrUYpaUv4We7o00QsWelAuT');
@@ -260,50 +265,101 @@ function removeResetPswParam() {
     if (new URLSearchParams(window.location.search).get('resetPsw') === 'true') {
       toggleDiv();
       removeResetPswParam();
-    }
+    };
 
-    function toggleDiv() {
-      if (isOpen) {
-        hideDiv();
-      } else {
-        showDiv();
+    document.addEventListener("DOMContentLoaded", () => {
+      const emailPopup = document.getElementById("emailPopup");
+      const overlay = document.getElementById("overlay");
+      const toggleEmailPopupBtn = document.getElementById("toggleEmailPopupBtn");
+      const emailForm = document.getElementById("emailForm");
+      const verifyEmailForm = document.getElementById("verifyEmailForm");
+      let isEmailPopupOpen = false;
+      
+      function toggleEmailPopup() {
+        if (isEmailPopupOpen) {
+          hideEmailPopup();
+        } else {
+          showEmailPopup();
+        }
       }
-    }
-
-    function showDiv() {
-      pswDiv.style.display = "block";
-      overlay.style.display = "block"; 
-      void pswDiv.offsetWidth;
-      pswDiv.style.opacity = "1";
-      pswDiv.style.transform = "scale(1)";
-      overlay.style.opacity = "1";
-      overlay.style.backdropFilter = "blur(8px)";
-      isOpen = true;
-    }
-
-    function hideDiv() {
-      pswDiv.style.opacity = "0";
-      pswDiv.style.transform = "scale(0.95)";
-      overlay.style.opacity = "0";
-      overlay.style.backdropFilter = "blur(1px)";
-      setTimeout(() => {
-        pswDiv.style.display = "none";
-        overlay.style.display = "none";
-      }, 400);
-      isOpen = false;
-    }
-
-    overlay.addEventListener("click", () => {
-      if (isOpen) hideDiv();
-    });
-
-    showForm.addEventListener('click', () => {
-      if(pswDiv.style.display === 'block') {
-        toggleDiv()
-      } else {
-        toggleDiv()
+    
+      function showEmailPopup() {
+        emailPopup.style.display = "block";
+        overlay.style.display = "block";
+        void emailPopup.offsetWidth;
+        emailPopup.style.opacity = "1";
+        emailPopup.style.transform = "scale(1)";
+        isEmailPopupOpen = true;
       }
+    
+      function hideEmailPopup() {
+        emailPopup.style.opacity = "0";
+        emailPopup.style.transform = "scale(0.95)";
+        setTimeout(() => {
+          emailPopup.style.display = "none";
+          overlay.style.display = "none";
+        }, 400);
+        isEmailPopupOpen = false;
+      }
+    
+      overlay.addEventListener("click", () => {
+        if (isEmailPopupOpen) hideEmailPopup();
+      });
+    
+      toggleEmailPopupBtn.addEventListener("click", toggleEmailPopup());
+
+      if (new URLSearchParams(window.location.search).get('resetEml') === 'true') {
+        showEmailPopup();
+        removeResetEmlParam();
+      };
+    
+      emailForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const password = document.getElementById("currentPassword").value.trim();
+        const newEmail = document.getElementById("newEmail").value.trim();
+        const token = localStorage.getItem("authToken");
+    
+        fetch("https://a1dos-login.onrender.com/request-email-change", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, password, newEmail })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert("Verification code sent to new email.");
+            emailForm.style.display = "none";
+            verifyEmailForm.style.display = "block";
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch(err => console.error("Error requesting email change:", err));
+      });
+    
+      verifyEmailForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const newEmail = document.getElementById("newEmail").value.trim();
+        const verificationCode = document.getElementById("verificationCode").value.trim();
+    
+        fetch("https://a1dos-login.onrender.com/verify-email-change", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ newEmail, code: verificationCode })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert("Email updated successfully!");
+            hideEmailPopup();
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch(err => console.error("Error verifying email change:", err));
+      });
     });
+    
 
     sendCodeBtn.addEventListener('click', () => {
         const email = document.getElementById('email').value.trim();
@@ -349,6 +405,50 @@ function removeResetPswParam() {
         })
         .catch(err => console.error('Error updating password:', err));
     });
+
+    // SMS VERIFY
+    const phonePopup = document.getElementById("phoneNumber");
+    const sendCodeBtnP = document.getElementById("sendCodeBtn");
+    const verifySection = document.getElementById("verifySection");
+    const overlayP = document.getElementById("overlay");
+    let isPhonePopupOpen = false;
+
+    document.getElementById("showPhone").addEventListener("click", () => {
+      togglePhonePopup()
+    })
+    
+    function togglePhonePopup() {
+      if (isPhonePopupOpen) {
+        hidePhonePopup();
+      } else {
+        showPhonePopup();
+      }
+    }
+    
+    function showPhonePopup() {
+      phonePopup.style.display = "block";
+      overlayP.style.display = "block"; 
+      void phonePopup.offsetWidth; 
+      phonePopup.style.opacity = "1";
+      phonePopup.style.transform = "scale(1)";
+      isPhonePopupOpen = true;
+    }
+    
+    function hidePhonePopup() {
+      phonePopup.style.opacity = "0";
+      phonePopup.style.transform = "scale(0.95)";
+      setTimeout(() => {
+        phonePopup.style.display = "none";
+        overlayP.style.display = "none";
+      }, 400);
+      isPhonePopupOpen = false;
+    }
+    
+    overlayP.addEventListener("click", () => {
+      if (isPhonePopupOpen) hidePhonePopup();
+    });
+    
+  
     
     // Device sessions: load sessions and revoke session functions
     window.revokeSession = function(sessionId, sessionToken) {
