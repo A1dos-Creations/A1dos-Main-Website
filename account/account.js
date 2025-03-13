@@ -256,7 +256,6 @@ function removeResetEmlParam() {
 
     const sendCodeBtn = document.getElementById('sendCodeBtn');
     const passwordForm = document.getElementById('passwordForm');
-    const showForm = document.getElementById('showForm');
     const pswDiv = document.getElementById('resetPswPopup');
     const overlay = document.getElementById('overlay');
 
@@ -267,9 +266,7 @@ function removeResetEmlParam() {
       removeResetPswParam();
     };
 
-    document.addEventListener("DOMContentLoaded", () => {
       const emailPopup = document.getElementById("emailPopup");
-      const overlay = document.getElementById("overlay");
       const toggleEmailPopupBtn = document.getElementById("toggleEmailPopupBtn");
       const emailForm = document.getElementById("emailForm");
       const verifyEmailForm = document.getElementById("verifyEmailForm");
@@ -358,7 +355,6 @@ function removeResetEmlParam() {
         })
         .catch(err => console.error("Error verifying email change:", err));
       });
-    });
     
 
     sendCodeBtn.addEventListener('click', () => {
@@ -405,52 +401,7 @@ function removeResetEmlParam() {
         })
         .catch(err => console.error('Error updating password:', err));
     });
-
-    // SMS VERIFY
-    const phonePopup = document.getElementById("phoneNumber");
-    const sendCodeBtnP = document.getElementById("sendCodeBtn");
-    const verifySection = document.getElementById("verifySection");
-    const overlayP = document.getElementById("overlay");
-    let isPhonePopupOpen = false;
-
-    document.getElementById("showPhone").addEventListener("click", () => {
-      togglePhonePopup()
-    })
     
-    function togglePhonePopup() {
-      if (isPhonePopupOpen) {
-        hidePhonePopup();
-      } else {
-        showPhonePopup();
-      }
-    }
-    
-    function showPhonePopup() {
-      phonePopup.style.display = "block";
-      overlayP.style.display = "block"; 
-      void phonePopup.offsetWidth; 
-      phonePopup.style.opacity = "1";
-      phonePopup.style.transform = "scale(1)";
-      isPhonePopupOpen = true;
-    }
-    
-    function hidePhonePopup() {
-      phonePopup.style.opacity = "0";
-      phonePopup.style.transform = "scale(0.95)";
-      setTimeout(() => {
-        phonePopup.style.display = "none";
-        overlayP.style.display = "none";
-      }, 400);
-      isPhonePopupOpen = false;
-    }
-    
-    overlayP.addEventListener("click", () => {
-      if (isPhonePopupOpen) hidePhonePopup();
-    });
-    
-  
-    
-    // Device sessions: load sessions and revoke session functions
     window.revokeSession = function(sessionId, sessionToken) {
       fetch('https://a1dos-login.onrender.com/revoke-session', {
         method: 'POST',
