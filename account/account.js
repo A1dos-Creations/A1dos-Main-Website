@@ -24,7 +24,7 @@ function removeResetEmlParam() {
         return;
       }
       
-      fetch('https://a1dos-login.onrender.com/create-checkout-session', {
+      fetch('https://api.a1dos-creations.com/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token })
@@ -98,7 +98,7 @@ function removeResetEmlParam() {
       const token = localStorage.getItem("authToken");
       if (!token) return; 
       
-      fetch("https://a1dos-login.onrender.com/verify-token", {
+      fetch("https://api.a1dos-creations.com/verify-token", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token })
@@ -125,7 +125,7 @@ function removeResetEmlParam() {
     
     setInterval(pollTokenValidity, 5000);
 
-    const socket = new WebSocket('wss://a1dos-login.onrender.com');
+    const socket = new WebSocket('wss://api.a1dos-creations.com');
 
     socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
@@ -172,7 +172,7 @@ function removeResetEmlParam() {
       emailToggle.addEventListener('change', () => {
         const newPreference = emailToggle.checked;
         toggleLabel.textContent = newPreference ? "Enabled" : "Disabled";
-        fetch("https://a1dos-login.onrender.com/update-notifications", {
+        fetch("https://api.a1dos-creations.com/update-notifications", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ token, emailNotifications: newPreference })
@@ -198,7 +198,7 @@ function removeResetEmlParam() {
     }
     
     function linkGoogleHandler() {
-        fetch('https://a1dos-login.onrender.com/verify-token', {
+        fetch('https://api.a1dos-creations.com/verify-token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token })
@@ -207,7 +207,7 @@ function removeResetEmlParam() {
         .then(data => {
             if (data.valid) {
                 const userId = data.user.id;
-                window.location.href = `https://a1dos-login.onrender.com/auth/google?state=${userId}`;
+                window.location.href = `https://api.a1dos-creations.com/auth/google?state=${userId}`;
             } else {
                 showMessage("Session expired. Please log in again.", 'red');
                 setTimeout(() => showMessage('', 'black'), 3000);
@@ -217,7 +217,7 @@ function removeResetEmlParam() {
     }
     
     function unlinkGoogleHandler() {
-        fetch("https://a1dos-login.onrender.com/unlink-google", {
+        fetch("https://api.a1dos-creations.com/unlink-google", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ token })
@@ -235,7 +235,7 @@ function removeResetEmlParam() {
     }
     
     function checkGoogleLinkStatus() {
-        fetch('https://a1dos-login.onrender.com/check-google-link', {
+        fetch('https://api.a1dos-creations.com/check-google-link', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token })
@@ -261,6 +261,7 @@ function removeResetEmlParam() {
     const openPopup = document.getElementById("showForm");
 
     let isOpen = false;
+    hidePopup();
 
     if (new URLSearchParams(window.location.search).get('resetPsw') === 'true') {
       togglePopup();
@@ -306,7 +307,7 @@ function removeResetEmlParam() {
         const verificationCode = document.getElementById('verificationCode').value.trim();
         const newPassword = document.getElementById('newPassword').value.trim();
 
-        fetch('https://a1dos-login.onrender.com/update-password', {
+        fetch('https://api.a1dos-creations.com/update-password', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, verificationCode, newPassword }),
@@ -326,7 +327,7 @@ function removeResetEmlParam() {
     });
     
     window.revokeSession = function(sessionId, sessionToken) {
-      fetch('https://a1dos-login.onrender.com/revoke-session', {
+      fetch('https://api.a1dos-creations.com/revoke-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, sessionId })
@@ -358,7 +359,7 @@ function removeResetEmlParam() {
     }
   
     function loadUserSessions() {
-      fetch("https://a1dos-login.onrender.com/get-user-sessions", {
+      fetch("https://api.a1dos-creations.com/get-user-sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token })
