@@ -313,6 +313,14 @@ function removeResetPswParam() {
     loadUserSessions();
   });
 
+  const messageEl = document.getElementById("message");
+  
+  function showMessage(msg, color = 'black') {
+    messageEl.textContent = msg;
+    messageEl.style.color = color;
+    messageEl.style.display = msg.trim() ? 'block' : 'none';
+  }
+
   const sendCodeBtn = document.getElementById('sendCodeBtn');
   const passwordForm = document.getElementById('passwordForm');
   const pswDiv = document.getElementById('resetPswPopup');
@@ -338,7 +346,7 @@ function removeResetPswParam() {
       overlay.style.backdropFilter = "blur(0px)"
       pswDiv.style.display = "block";
       overlay.style.display = "block";
-      overlay.style.backdropFilter = "blur(13px)";
+      overlay.style.backdropFilter = "blur(8px)";
       void pswDiv.offsetWidth;
       pswDiv.style.opacity = "1";
       pswDiv.style.transform = "scale(1)";
@@ -365,6 +373,33 @@ function removeResetPswParam() {
     } else {
       console.error('Toggle button element not found');
     }
+
+    document.getElementById("sendCodeBtn").addEventListener("click", () => {
+      const email = document.getElementById("email").value.trim();
+      
+      if (!email) {
+          showMessage("Please enter a valid email address.", "red");
+          return;
+      }
+  
+      fetch("https://api.a1dos-creations.com/send-verification-code", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+      })
+      .then(res => res.json())
+      .then(data => {
+          if (data.success) {
+              showMessage("Verification code sent successfully!", "green");
+          } else {
+              showMessage("Failed to send verification code: " + data.message, "red");
+          }
+      })
+      .catch(err => {
+          console.error("Error sending verification code:", err);
+          showMessage("Network error. Please try again later.", "red");
+      });
+  });  
 
   passwordForm.addEventListener('submit', (e) => {
       e.preventDefault();
