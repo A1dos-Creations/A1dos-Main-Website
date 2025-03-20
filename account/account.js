@@ -337,6 +337,7 @@ function removeResetPswParam() {
     function showPopup() {
       pswDiv.style.display = "block";
       overlay.style.display = "block";
+      overlay.style.backdropFilter = "blur(15px)";
       void pswDiv.offsetWidth;
       pswDiv.style.opacity = "1";
       pswDiv.style.transform = "scale(1)";
@@ -346,7 +347,7 @@ function removeResetPswParam() {
     function hidePopup() {
       pswDiv.style.opacity = "0";
       pswDiv.style.transform = "scale(0.95)";
-      overlay.style.backdropFilter = "blur(2px)";
+      overlay.style.backdropFilter = "blur(1px)";
       setTimeout(() => {
         pswDiv.style.display = "none";
         overlay.style.display = "none";
