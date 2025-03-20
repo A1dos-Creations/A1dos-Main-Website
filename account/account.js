@@ -320,7 +320,6 @@ function removeResetPswParam() {
   const openPopup = document.getElementById("showForm");
 
   let isOpen = false;
-  hidePopup();
 
   if (new URLSearchParams(window.location.search).get('resetPsw') === 'true') {
     togglePopup();
@@ -347,6 +346,7 @@ function removeResetPswParam() {
     function hidePopup() {
       pswDiv.style.opacity = "0";
       pswDiv.style.transform = "scale(0.95)";
+      overlay.style.backdropFilter = "blur(2px)";
       setTimeout(() => {
         pswDiv.style.display = "none";
         overlay.style.display = "none";
@@ -357,8 +357,12 @@ function removeResetPswParam() {
     overlay.addEventListener("click", () => {
       if (isOpen) hidePopup();
     });
-  
-    openPopup.addEventListener("click", togglePopup());
+    
+    if(openPopup) {
+      openPopup.addEventListener("click", togglePopup);
+    } else {
+      console.error('Toggle button element not found');
+    }
 
   passwordForm.addEventListener('submit', (e) => {
       e.preventDefault();
