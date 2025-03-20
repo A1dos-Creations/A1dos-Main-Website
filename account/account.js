@@ -44,7 +44,6 @@ function removeResetPswParam() {
       });
     });
 
-
     const token = localStorage.getItem('authToken');
     const user = JSON.parse(localStorage.getItem("user") || "{}");
   
@@ -326,6 +325,8 @@ function removeResetPswParam() {
   const pswDiv = document.getElementById('resetPswPopup');
   const overlay = document.getElementById('overlay');
   const openPopup = document.getElementById("showForm");
+
+  console.warn("Account Page - Web Version 2.3.28")
 
   let isOpen = false;
 
