@@ -258,6 +258,7 @@ function removeResetEmlParam() {
     const passwordForm = document.getElementById('passwordForm');
     const pswDiv = document.getElementById('resetPswPopup');
     const overlay = document.getElementById('overlay');
+    const openPopup = document.getElementById("showForm");
 
     let isOpen = false;
 
@@ -266,116 +267,39 @@ function removeResetEmlParam() {
       removeResetPswParam();
     };
 
-      const emailPopup = document.getElementById("emailPopup");
-      const toggleEmailPopupBtn = document.getElementById("toggleEmailPopupBtn");
-      const emailForm = document.getElementById("emailForm");
-      const verifyEmailForm = document.getElementById("verifyEmailForm");
-      let isEmailPopupOpen = false;
       
-      function toggleEmailPopup() {
-        if (isEmailPopupOpen) {
-          hideEmailPopup();
+      function togglePopup() {
+        if (isOpen) {
+          hidePopup();
         } else {
-          showEmailPopup();
+          showPopup();
         }
       }
     
-      function showEmailPopup() {
-        emailPopup.style.display = "block";
+      function showPopup() {
+        pswDiv.style.display = "block";
         overlay.style.display = "block";
-        void emailPopup.offsetWidth;
-        emailPopup.style.opacity = "1";
-        emailPopup.style.transform = "scale(1)";
-        isEmailPopupOpen = true;
+        void pswDiv.offsetWidth;
+        pswDiv.style.opacity = "1";
+        pswDiv.style.transform = "scale(1)";
+        isOpen = true;
       }
     
-      function hideEmailPopup() {
-        emailPopup.style.opacity = "0";
-        emailPopup.style.transform = "scale(0.95)";
+      function hidePopup() {
+        pswDiv.style.opacity = "0";
+        pswDiv.style.transform = "scale(0.95)";
         setTimeout(() => {
-          emailPopup.style.display = "none";
+          pswDiv.style.display = "none";
           overlay.style.display = "none";
         }, 400);
-        isEmailPopupOpen = false;
+        isOpen = false;
       }
     
       overlay.addEventListener("click", () => {
-        if (isEmailPopupOpen) hideEmailPopup();
+        if (isOpen) hidePopup();
       });
     
-      toggleEmailPopupBtn.addEventListener("click", toggleEmailPopup());
-
-      if (new URLSearchParams(window.location.search).get('resetEml') === 'true') {
-        showEmailPopup();
-        removeResetEmlParam();
-      };
-    
-      emailForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const password = document.getElementById("currentPassword").value.trim();
-        const newEmail = document.getElementById("newEmail").value.trim();
-        const token = localStorage.getItem("authToken");
-    
-        fetch("https://a1dos-login.onrender.com/request-email-change", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token, password, newEmail })
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            alert("Verification code sent to new email.");
-            emailForm.style.display = "none";
-            verifyEmailForm.style.display = "block";
-          } else {
-            alert(data.message);
-          }
-        })
-        .catch(err => console.error("Error requesting email change:", err));
-      });
-    
-      verifyEmailForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const newEmail = document.getElementById("newEmail").value.trim();
-        const verificationCode = document.getElementById("verificationCode").value.trim();
-    
-        fetch("https://a1dos-login.onrender.com/verify-email-change", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ newEmail, code: verificationCode })
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            alert("Email updated successfully!");
-            hideEmailPopup();
-          } else {
-            alert(data.message);
-          }
-        })
-        .catch(err => console.error("Error verifying email change:", err));
-      });
-    
-
-    sendCodeBtn.addEventListener('click', () => {
-        const email = document.getElementById('email').value.trim();
-        fetch('https://a1dos-login.onrender.com/send-verification-code', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email }),
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                showMessagePsw("Verification code sent to your email.", 'green');
-                setTimeout(() => showMessagePsw(' ', 'black'), 3000);
-            } else {
-                showMessagePsw(data.message, "red");
-                setTimeout(() => showMessagePsw(' ', 'black'), 3000);
-            }
-        })
-        .catch(err => console.error('Error sending verification code:', err));
-    });
+      openPopup.addEventListener("click", togglePopup());
 
     passwordForm.addEventListener('submit', (e) => {
         e.preventDefault();

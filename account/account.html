@@ -8,10 +8,6 @@
     <link rel="icon" type="image/x-icon" href="/AuthFaviconLight.png" id="favicon">
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3/build/jwt-decode.min.js"></script>
-
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js"></script>
-
 </head>
 
 <script>
@@ -74,13 +70,10 @@
     <div id="av571v3">
         <h2 class="header2" style="margin-bottom: -0px;">Account Info: (A1dos Account)</h2>
         <img>
-        <button style="background-color: transparent;border-style: none;margin-top: -6px;margin-left: 370px;" id="showForm">
+        <button style="background-color: transparent;border-style: none;margin-top: -6px;margin-left: 370px;" id="showForm" onclick="togglePopup()">
             <img src="./edit.png" alt="Edit Icon" class="icon">
         </button>
-        <button id="toggleEmailPopupBtn" style="background-color: transparent;border-style: none;margin-top: 40px;margin-left: 240px;margin-bottom: -70px;" id="showPhone">
-            <img src="./edit.png" alt="edit email" class="icon">
-        </button>
-        <div id="accountInfo" style="margin-top: -70px;"></div>
+        <div id="accountInfo" style="margin-top: 0;"></div>
         <button id="logout-btn">Logout</button>
         <button id="google-link-btn" class="link">
             <p id="google-link-btn-text">Link Google Account</p>
@@ -125,7 +118,7 @@
             }
       </style>
 
-      <div id="overlay" class="overlay"></div>
+      <div id="overlay" class="overlay" style="display: none;"></div>
 
       <div id="resetPswPopup" style="opacity: 0; transform: scale(0.95); transition: opacity 0.5s ease, transform 0.5s ease; display: none;z-index: 9999;">
         <p id="pswAlert"></p>
@@ -151,25 +144,7 @@
             </div>
         </form>
       </div>
-
-      <div id="emailPopup" style="opacity: 0; transform: scale(0.95); transition: opacity 0.5s ease, transform 0.5s ease; display: none; z-index: 9999;">
-        <div>
-          <h3>Change Email</h3>
-          <form id="emailForm">
-            <input type="password" id="currentPassword" placeholder="Enter current password" required>
-            <input type="email" id="newEmail" placeholder="Enter new email" required>
-            <button type="submit">Send Verification Code</button>
-          </form>
-          
-          <form id="verifyEmailForm" style="display: none;">
-            <input type="text" id="verificationCodeE" placeholder="Enter verification code" required>
-            <button type="submit">Verify</button>
-          </form>
-        </div>
-      </div>
-      
-      <div id="overlay" style="display: none;"></div>
-
+    
       <div id="devicesListContainer">
         <h3>Signed-In Devices</h3>
         <button id="toggleDevicesBtn">Show Devices</button>
