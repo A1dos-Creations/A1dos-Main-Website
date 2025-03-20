@@ -8,11 +8,6 @@ function removeResetPswParam() {
   url.searchParams.delete("resetPsw");
   window.history.replaceState({}, document.title, url.pathname);
 }
-function removeResetEmlParam() {
-  const url = new URL(window.location);
-  url.searchParams.delete("resetEml");
-  window.history.replaceState({}, document.title, url.pathname);
-}
   
   document.addEventListener('DOMContentLoaded', () => {
     const stripe = Stripe('pk_live_51QzQdOG1SPsRBHogtiBFwbebzV9JmhES0R4ZZGjHABPcEvnpGZaFDGlDONzPMz0gNMn664g1fcfhrUYpaUv4We7o00QsWelAuT');
@@ -253,78 +248,6 @@ function removeResetEmlParam() {
     setTimeout(() => {
         checkGoogleLinkStatus();
     }, 2000);
-
-    const sendCodeBtn = document.getElementById('sendCodeBtn');
-    const passwordForm = document.getElementById('passwordForm');
-    const pswDiv = document.getElementById('resetPswPopup');
-    const overlay = document.getElementById('overlay');
-    const openPopup = document.getElementById("showForm");
-
-    let isOpen = false;
-    hidePopup();
-
-    if (new URLSearchParams(window.location.search).get('resetPsw') === 'true') {
-      togglePopup();
-      removeResetPswParam();
-    };
-
-      function togglePopup() {
-        if (isOpen) {
-          hidePopup();
-        } else {
-          showPopup();
-        }
-      }
-    
-      function showPopup() {
-        pswDiv.style.display = "block";
-        overlay.style.display = "block";
-        void pswDiv.offsetWidth;
-        pswDiv.style.opacity = "1";
-        pswDiv.style.transform = "scale(1)";
-        isOpen = true;
-      }
-    
-      function hidePopup() {
-        pswDiv.style.opacity = "0";
-        pswDiv.style.transform = "scale(0.95)";
-        setTimeout(() => {
-          pswDiv.style.display = "none";
-          overlay.style.display = "none";
-        }, 400);
-        isOpen = false;
-      }
-    
-      overlay.addEventListener("click", () => {
-        if (isOpen) hidePopup();
-      });
-    
-      openPopup.addEventListener("click", togglePopup());
-
-    passwordForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('email').value.trim();
-        const verificationCode = document.getElementById('verificationCode').value.trim();
-        const newPassword = document.getElementById('newPassword').value.trim();
-
-        fetch('https://api.a1dos-creations.com/update-password', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, verificationCode, newPassword }),
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                showMessage("Password changed successfully.", 'green');
-                setTimeout(() => showMessage(' ', 'black'), 3000);
-                pswDiv.style.display = 'none';
-            } else {
-                showMessagePsw(data.message, 'red');
-                setTimeout(() => showMessagePsw(' ', 'black'), 3000);
-            }
-        })
-        .catch(err => console.error('Error updating password:', err));
-    });
     
     window.revokeSession = function(sessionId, sessionToken) {
       fetch('https://api.a1dos-creations.com/revoke-session', {
@@ -388,5 +311,77 @@ function removeResetEmlParam() {
     }
   
     loadUserSessions();
+  });
+
+  const sendCodeBtn = document.getElementById('sendCodeBtn');
+  const passwordForm = document.getElementById('passwordForm');
+  const pswDiv = document.getElementById('resetPswPopup');
+  const overlay = document.getElementById('overlay');
+  const openPopup = document.getElementById("showForm");
+
+  let isOpen = false;
+  hidePopup();
+
+  if (new URLSearchParams(window.location.search).get('resetPsw') === 'true') {
+    togglePopup();
+    removeResetPswParam();
+  };
+
+    function togglePopup() {
+      if (isOpen) {
+        hidePopup();
+      } else {
+        showPopup();
+      }
+    }
+  
+    function showPopup() {
+      pswDiv.style.display = "block";
+      overlay.style.display = "block";
+      void pswDiv.offsetWidth;
+      pswDiv.style.opacity = "1";
+      pswDiv.style.transform = "scale(1)";
+      isOpen = true;
+    }
+  
+    function hidePopup() {
+      pswDiv.style.opacity = "0";
+      pswDiv.style.transform = "scale(0.95)";
+      setTimeout(() => {
+        pswDiv.style.display = "none";
+        overlay.style.display = "none";
+      }, 400);
+      isOpen = false;
+    }
+  
+    overlay.addEventListener("click", () => {
+      if (isOpen) hidePopup();
+    });
+  
+    openPopup.addEventListener("click", togglePopup());
+
+  passwordForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const verificationCode = document.getElementById('verificationCode').value.trim();
+      const newPassword = document.getElementById('newPassword').value.trim();
+
+      fetch('https://api.a1dos-creations.com/update-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, verificationCode, newPassword }),
+      })
+      .then(res => res.json())
+      .then(data => {
+          if (data.success) {
+              showMessage("Password changed successfully.", 'green');
+              setTimeout(() => showMessage(' ', 'black'), 3000);
+              pswDiv.style.display = 'none';
+          } else {
+              showMessagePsw(data.message, 'red');
+              setTimeout(() => showMessagePsw(' ', 'black'), 3000);
+          }
+      })
+      .catch(err => console.error('Error updating password:', err));
   });
   
