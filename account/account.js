@@ -263,11 +263,10 @@ function removeResetEmlParam() {
     let isOpen = false;
 
     if (new URLSearchParams(window.location.search).get('resetPsw') === 'true') {
-      toggleDiv();
+      togglePopup();
       removeResetPswParam();
     };
 
-      
       function togglePopup() {
         if (isOpen) {
           hidePopup();
