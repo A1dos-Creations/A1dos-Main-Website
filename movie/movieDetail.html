@@ -4,14 +4,10 @@
   <meta charset="UTF-8">
   <title>Movie Details</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; color: #e9e6e1; background-color: rgb(26, 26, 26); }
-    h1 { color: #e9e6e1; }
-
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h1 { color: #333; }
 
     .loader {
-        justify-self: center;
-        margin-top: auto;
-        margin-bottom: auto;
         width: 60px;
         aspect-ratio: 1;
         --g: conic-gradient(from -90deg at 10px 10px,#fff 90deg,#0000 0);
@@ -28,19 +24,64 @@
 </head>
 <body>
   <div class="loader"></div>
-  <h1 id="movieTitle">Loading...</h1>
-  <p id="movieDescription">Please wait, we are fetching the movie details...</p>
-  <p id="releaseDate"></p>
+  <h1>Movie Title</h1>
+  <p id="movie-description"></p>
+  <p id="release-date"></p>
 
-  <!-- RSVP Form -->
   <form id="rsvpForm" onsubmit="submitRSVP(event)">
     <input type="text" name="name" placeholder="Your Name" required>
-    <input type="number" name="guests" placeholder="Number of Guests" required>
+    <input type="text" name="guests" placeholder="Number of Guests" required>
     <button type="submit">RSVP</button>
   </form>
 
   <p id="rsvpStatus"></p>
 
-  <script src="movieDetail.js"></script>
+  <script>
+    // Extract uniqueId from URL
+    const uniqueId = window.location.pathname.split('/').pop();
+
+    // Fetch movie data from the backend
+    fetch(`https://api.a1dos-creations.com/movie/${uniqueId}`)
+      .then(response => response.json())
+      .then(movie => {
+        // Populate the movie details
+        document.querySelector('h1').textContent = movie.title;
+        document.querySelector('#movie-description').textContent = movie.description;
+        document.querySelector('#release-date').textContent = `Release Date: ${movie.release_date || 'N/A'}`;
+      })
+      .catch(error => {
+        console.error("Error fetching movie:", error);
+        document.body.innerHTML = "<h1>Movie not found</h1>";
+      });
+
+    // RSVP Form Submission
+    function submitRSVP(event) {
+      event.preventDefault();
+
+      const name = event.target.name.value;
+      const guests = event.target.guests.value;
+
+      fetch('https://api.a1dos-creations.com/movie/rsvp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer YOUR_JWT_TOKEN', // Ensure you pass the JWT token
+        },
+        body: JSON.stringify({ uniqueId, name, guests }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          document.querySelector('#rsvpStatus').textContent = "RSVP saved successfully!";
+        } else {
+          document.querySelector('#rsvpStatus').textContent = "Error saving RSVP.";
+        }
+      })
+      .catch(error => {
+        console.error('Error submitting RSVP:', error);
+        document.querySelector('#rsvpStatus').textContent = "An error occurred.";
+      });
+    }
+  </script>
 </body>
 </html>

@@ -36,7 +36,7 @@ function getUniqueIdFromPath() {
     const guests = event.target.guests.value;
   
     // Send RSVP data to your backend API (you can customize this endpoint)
-    fetch(`https://api.a1dos-creations.com/movies/${uniqueId}`, {
+    fetch(`https://api.a1dos-creations.com/movie/rsvp/${uniqueId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
