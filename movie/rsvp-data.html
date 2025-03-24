@@ -40,13 +40,11 @@
       }
       
       try {
-        const response = await fetch('https://api.a1dos-creations.com/rsvp-data', {
-          method: 'POST',
+        const response = await fetch('https://api.a1dos-creations.com/movie/rsvp-data', {
+          method: 'GET',
           headers: {
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify({ token })  
         });
 
         if (!response.ok) {
