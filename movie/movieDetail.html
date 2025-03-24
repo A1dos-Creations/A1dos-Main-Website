@@ -38,7 +38,7 @@
 
   <script>
     // Extract uniqueId from URL
-    const uniqueId = window.location.pathname.split('/').pop();
+    const uniqueId = window.location.pathname.split('/').pop();  // Extract uniqueId from the URL path
 
     // Fetch movie data from the backend
     fetch(`https://api.a1dos-creations.com/movie/${uniqueId}`)
