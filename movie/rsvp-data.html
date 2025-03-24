@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RSVP Data</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    #rsvpContainer {
+      margin-top: 20px;
+    }
+    .error {
+      color: red;
+    }
+    .rsvp-item {
+      border-bottom: 1px solid #ccc;
+      margin-bottom: 10px;
+      padding-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>RSVP Data</h1>
+  <div id="rsvpContainer">
+    <!-- RSVP data will be injected here -->
+  </div>
+  <script>
+    function showMessage(message, isError = false) {
+      const container = document.getElementById('rsvpContainer');
+      container.innerHTML = `<p class="${isError ? 'error' : ''}">${message}</p>`;
+    }
+
+    async function loadRSVPData() {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        showMessage("You are not logged in.", true);
+        return;
+      }
+      
+      try {
+        const response = await fetch('https://api.a1dos-creations.com/rsvp-data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ token })  
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          showMessage(errorData.message || "Access Denied", true);
+          return;
+        }
+        
+        const data = await response.json();
+        if (data.success && data.rsvps) {
+          renderRSVPData(data.rsvps);
+        } else {
+          showMessage("Access Denied", true);
+        }
+      } catch (err) {
+        console.error("Error fetching RSVP data:", err);
+        showMessage("Error fetching RSVP data.", true);
+      }
+    }
+
+    function renderRSVPData(rsvps) {
+      const container = document.getElementById('rsvpContainer');
+      container.innerHTML = "";
+      if (rsvps.length === 0) {
+        container.innerHTML = "<p>No RSVP data available.</p>";
+        return;
+      }
+      rsvps.forEach(rsvp => {
+        const div = document.createElement('div');
+        div.className = "rsvp-item";
+        div.innerHTML = `
+          <p><strong>Event ID:</strong> ${rsvp.event_id}</p>
+          <p><strong>Name:</strong> ${rsvp.name}</p>
+          <p><strong>Guests:</strong> ${rsvp.guests}</p>
+          <p><strong>RSVP Date:</strong> ${new Date(rsvp.created_at).toLocaleString()}</p>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", loadRSVPData);
+  </script>
+</body>
+</html>

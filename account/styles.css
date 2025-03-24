@@ -96,10 +96,10 @@ button:hover{
     position: absolute;
     text-align: center;
     padding: 15px;
-    background-color: #f0b7a4;
+    background-color: #e1e3e7;
     border-radius: 8px;
     border-style: solid;
-    border-color: rgb(160, 62, 45);
+    border-color: rgb(81, 87, 95);
     display: none;
     left: 0;
     right: 0;
@@ -362,26 +362,16 @@ button:hover{
     font-size: 20px;
     margin-top: 10px;
 }
-#devicesListContainer button{
-    width: 120px;
-    height: 30px;
-    font-size: 15px;
-    margin-top: 10px;
-    border-radius: 8px;
-    border-style: solid;
-    border-color: rgb(37, 37, 37);
-    background-color: rgb(184, 184, 184);
+#deviceList {
+    max-width: 600px;
+    min-width: 250px;
+    width: auto;
+    max-height: 600px;
+    min-height: 300px;
+    height: auto;
 }
-#devicesListContainer button:hover{
-    width: 120px;
-    height: 30px;
-    font-size: 15px;
-    margin-top: 10px;
-    border-radius: 8px;
-    border-style: solid;
-    border-color: rgb(37, 37, 37);
-    background-color: rgb(151, 151, 151);
-}
+
+
 #hm7235897g7{
     font-family: Lexend Deca;
     color: white;
