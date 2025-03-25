@@ -27,7 +27,7 @@
     <div id="api-status" class="para1">Checking Sign-in API status...</div>
         <script>
         function checkApiStatus() {
-            fetch('https://a1dos-login.onrender.com/health')
+            fetch('https://api.a1dos-creations.com/health')
             .then(response => response.json())
             .then(data => {
                 const statusEl = document.getElementById('api-status');
