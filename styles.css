@@ -12,6 +12,22 @@ img {vertical-align: middle;border-radius: 20px;border-color: white;border-style
   margin: auto;
 }
 
+/* Close Button - index.html */
+#closeNotification{
+  background-color: none;
+  background: none;
+  color: white;
+  margin-top: -70px;
+  position: absolute;
+  margin-left: 95%;
+  border: none;
+  font-family: monospace;
+  font-size: 50px;
+  -webkit-transition-duration: .4s;
+  transition-duration: .4s;
+  opacity: 1;
+}
+
 /* Caption text */
 .text {
   color: #f2f2f2;
@@ -507,7 +523,6 @@ body {
 }
 
 #w75891g7{
-  background-color: rgba(255, 98, 98, 0.336);
   padding: 5px 15px;
   text-align: left;
   height: 70px;
@@ -517,6 +532,12 @@ body {
   padding: 5px 15px;
   position: fixed;
   z-index: 9999;
+  -webkit-transition-duration: .4s;
+  transition-duration: .4s;
+  opacity: 1;
+}
+.hidden_{
+  opacity: 0;
 }
 #parg10351781{
   font-family: Lexend Deca;

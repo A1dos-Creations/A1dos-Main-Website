@@ -18,10 +18,11 @@
   <script defer src="app.js"></script>
   <div id="w75891g7" style="margin-bottom: 50px;padding-top: 10px;">
     <img src="/error.png" alt="Error Icon" id="infoIcon">
-    <h2 class="header3">Temporary Service Outage</h2>
-    <p id="parg10351781">Some API services are currently down. Please be patient as we work to bring back our API. Services Affected: <strong>Login, Register, Account Management, Device List, STL Login, Calendar Syncing, and more.</strong> <i>March 25, 11:44am</i></p>
+    <h2 class="header3" id="head7523b235kj">Services Restored</h2>
+    <p id="parg10351781">Services have been restored. Some services may epericen buffering or slow loading speeds. Services Affected: <strong>Login, Register, Account Management, Device List, STL Login, Calendar Syncing, and more.</strong> <i>March 25, 11:44am</i></p>
+    <button id="closeNotification" class="close">&times;</button>
   </div>
-  <nav style="margin-top: 50px;">
+  <nav style="margin-top: 50px;" id="navbar">
     <a href="index.html">
       <img src="MainFavicon.png" style="height: 5vh;width: auto;border-radius: 4px;border-width: -2em;">
     </a>
@@ -30,6 +31,66 @@
     </a>
   </nav>
 </head>
+<script>
+  if (!localStorage.getItem("notificationClosed")) {
+    document.getElementById("w75891g7").classList.remove("hidden_");
+  } if (localStorage.getItem("notificationClosed")) {
+    document.getElementById("w75891g7").classList.add("hidden_");
+    document.getElementById("w75891g7").style.display = "none";
+  }
+  document.getElementById("closeNotification").addEventListener("click", function() {
+    document.getElementById("w75891g7").classList.add("hidden_");
+    localStorage.setItem("notificationClosed", "true");
+  });
+
+  function checkApiStatus() {
+            fetch('https://api.a1dos-creations.com/health')
+            .then(response => response.json())
+            .then(data => {
+              const now = new Date();
+              const timeString = now.toLocaleTimeString();
+
+              const mainDiv = document.getElementById('w75891g7');
+              const notifText = document.getElementById('parg10351781');
+              const notifHead = document.getElementById('head7523b235kj');
+
+                if (!data.status === "ok") {
+                  mainDiv.style.backgroundColor = '255, 98, 98, 0.336';
+                  notifHead.innerHTML = "<strong>Temporary Service Outage</strong>"
+                  notifText.innerHTML = "We are experiencing a temporary service outage. This message was shown automatically due to an invalid response from the server. Services Impacted: <strong>Login, Register, Account Management, Device List, STL Login, Calendar Syncing, and more.</strong> <br> <i>" + timeString + "</i>"
+                  if (!localStorage.getItem("notificationClosed")) {
+                    document.getElementById("w75891g7").classList.remove("hidden_");
+                  } if (localStorage.getItem("notificationClosed")) {
+                    document.getElementById("w75891g7").classList.add("hidden_");
+                    document.getElementById("w75891g7").style.display = "none";
+                  }
+                  document.getElementById("closeNotification").addEventListener("click", function() {
+                    document.getElementById("w75891g7").classList.add("hidden_");
+                    localStorage.setItem("notificationClosed", "true");
+                  });   
+                } else {
+                  mainDiv.style.backgroundColor = '135, 255, 98, 0.336';
+                  if (!localStorage.getItem("notificationClosed")) {
+                    document.getElementById("w75891g7").classList.remove("hidden_");
+                  } if (localStorage.getItem("notificationClosed")) {
+                    document.getElementById("w75891g7").classList.add("hidden_");
+                    document.getElementById("w75891g7").style.display = "none";
+                  }
+                  document.getElementById("closeNotification").addEventListener("click", function() {
+                    document.getElementById("w75891g7").classList.add("hidden_");
+                    localStorage.setItem("notificationClosed", "true");
+                  });                
+                }
+            })
+            .catch(err => {
+                
+                console.error("Error fetching API status:", err);
+            });
+        }
+        
+        checkApiStatus();
+        setInterval(checkApiStatus, 30000);
+</script>
 <body style="background-color: black;">
 
   <canvas id="starsCanvas"></canvas>
@@ -48,7 +109,7 @@
   </div>
   <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.56/build/spline-viewer.js"></script>
 <spline-viewer loading-anim-type="spinner-small-light" url="https://prod.spline.design/KJenwXiHIS52PUbw/scene.splinecode" style="margin-top: -275px;"></spline-viewer>
-<div style="display: flex;flex-direction: column;top: -74vh;position: relative;">
+<div style="display: flex;flex-direction: column;top: -74vh;position: relative;display: block;">
 
   <a href="STLHome.html" id="button" style="text-decoration-line:none;border-radius: 8px;border-width: 2.75px;width: 10.5vw;height: 12vh;font-size: large;display: grid;margin-left: 5%;position: relative;">
     <button class="button hidden">> STL</button>

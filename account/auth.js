@@ -1,4 +1,4 @@
-const apiBaseUrl = 'https://a1dos-login.onrender.com';
+const apiBaseUrl = 'https://api.a1dos-creations.com';
 
 const button = document.getElementById('login-button');
 
@@ -97,7 +97,7 @@ window.onload = () => {
         .then(data => {
             if (data.valid) {
                 showMessage(`Welcome back, ${user.name}`, 'green');
-                setTimeout(() => showMessage(' ', 'black'), 3000);
+                setTimeout(() => showMessage(' ', 'black'), window.location.href = "./account", 3000);
             } else {
                 localStorage.removeItem('authToken');
                 localStorage.removeItem('user');
