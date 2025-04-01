@@ -1,0 +1,90 @@
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
+</head>
+<body style="background-color: rgb(32, 32, 32);">
+    <h3 style="font-family: Lexend Deca;color: white;font-size: 30px;text-align: center;">Signed-In Devices</h3>
+    <div id="devicesListContainer" style="border-radius: 8px;background-color: rgb(192, 192, 192);">
+        <ul id="deviceList" style="display: none;"></ul>
+    </div>
+
+    <style>
+        #devicesListContainer p{
+            font-size: 20px;
+            margin-top: 10px;
+        }
+        #deviceList {
+            max-width: 600px;
+            min-width: 250px;
+            width: auto;
+            max-height: 600px;
+            min-height: 300px;
+            height: auto;
+        }
+    </style>
+    <script>
+        window.revokeSession = function(sessionId, sessionToken) {
+      fetch('https://api.a1dos-creations.com/revoke-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, sessionId })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          showMessage("Session revoked successfully.", "green");
+          loadUserSessions(); // Refresh session list immediately
+          if (sessionToken === token) {
+            localStorage.clear();
+            window.location.href = "./auth.html";
+          }
+        } else {
+          showMessage("Failed to revoke session: " + data.message, "red");
+        }
+      })
+      .catch(err => console.error("Error revoking session:", err));
+    };
+  
+    function filterDuplicateSessions(sessions) {
+      const seen = {};
+      return sessions.filter(session => {
+        const key = `${session.device_info}-${session.location}`;
+        if (seen[key]) return false;
+        seen[key] = true;
+        return true;
+      });
+    }
+  
+    function loadUserSessions() {
+      fetch("https://api.a1dos-creations.com/get-user-sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          deviceList.innerHTML = "<br>";
+          const uniqueSessions = filterDuplicateSessions(data.sessions);
+          uniqueSessions.forEach(session => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+              <strong>Device:</strong> ${session.device_info} <br>
+              <strong>Location:</strong> ${session.location || "Unknown Location"} <br>
+              <strong>Last Login:</strong> ${new Date(session.login_time).toLocaleString()} <br>
+              <button onclick="revokeSession(${session.id}, '${session.session_token}')">Revoke</button><br>
+            `;
+            deviceList.appendChild(li);
+          });
+          deviceList.style.display = "block";
+        } else {
+          deviceList.innerHTML = "<li>No sessions found.</li>";
+        }
+      })
+      .catch(err => console.error("Error fetching sessions:", err));
+    }
+  
+        loadUserSessions();
+    </script>
+</body>

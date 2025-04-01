@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const token = localStorage.getItem('authToken'); 
     if (token) {
-      loginBtn.href = "account/account.html"; 
+      loginBtn.href = "account/dashboard"; 
       loginTxt.textContent = "My Account";
       loginTxt.style.width = 'fit-content';
       loginBtn.style.width = 'fit-content';

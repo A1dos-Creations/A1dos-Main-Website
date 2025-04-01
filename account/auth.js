@@ -39,7 +39,7 @@ async function loginUser() {
         localStorage.setItem('authToken', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         showMessage(`Login successful! Welcome, ${data.user.name}`, 'green');
-        setTimeout(() => showMessage(' ', 'black'), window.location.href = "account.html", 3000);
+        setTimeout(() => showMessage(' ', 'black'), window.location.href = "./dashboard", 3000);
   
         //await syncLocalTasks(data.token);
         //fetchTasks();
@@ -97,7 +97,7 @@ window.onload = () => {
         .then(data => {
             if (data.valid) {
                 showMessage(`Welcome back, ${user.name}`, 'green');
-                setTimeout(() => showMessage(' ', 'black'), window.location.href = "./account", 3000);
+                setTimeout(() => showMessage(' ', 'black'), window.location.href = "./dashboard", 3000);
             } else {
                 localStorage.removeItem('authToken');
                 localStorage.removeItem('user');
