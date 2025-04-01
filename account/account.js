@@ -12,6 +12,8 @@ function removeResetPswParam() {
   document.addEventListener('DOMContentLoaded', () => {
     const stripe = Stripe('pk_live_51QzQdOG1SPsRBHogtiBFwbebzV9JmhES0R4ZZGjHABPcEvnpGZaFDGlDONzPMz0gNMn664g1fcfhrUYpaUv4We7o00QsWelAuT');
 
+    let STLLinked = false;
+
     document.getElementById('upgrade-button').addEventListener('click', () => {
       const token = localStorage.getItem('authToken');
       if (!token) {
@@ -142,11 +144,20 @@ function removeResetPswParam() {
   
     if (user.email) {
       const createdAt = user.created_at ? new Date(user.created_at).toLocaleString() : "Unknown";
-      accountInfoDiv.innerHTML = `
-        <p><strong>Email:</strong> ${user.email}</p>
-        <p><strong>Account Created:</strong> ${createdAt}</p>
-        <p><strong>Name:</strong> ${user.name}</p>
-      `;
+      if(!STLLinked){
+        accountInfoDiv.innerHTML = `
+          <p><strong>Email:</strong> ${user.email}</p>
+          <p><strong>Account Created:</strong> ${createdAt}</p>
+          <p><strong>Name:</strong> ${user.name}</p>
+        `;
+      } else{
+        accountInfoDiv.innerHTML = `
+          <p><strong>Email:</strong> ${user.email}</p>
+          <p><strong>Account Created:</strong> ${createdAt}</p>
+          <p><strong>Name:</strong> ${user.name}</p>
+          <p><strong>Linked to STL Extension!</strong></p>
+        `;
+      }
     } else {
       accountInfoDiv.innerHTML = "<p>User data not available. Please log in.</p>";
       window.location.href = "./auth.html";
@@ -300,6 +311,9 @@ function removeResetPswParam() {
               <button onclick="revokeSession(${session.id}, '${session.session_token}')">Revoke</button><br>
             `;
             deviceList.appendChild(li);
+            if (session.device_info === "STL Extension") {
+              STLLinked = true;
+            }
           });
           deviceList.style.display = "block";
         } else {
