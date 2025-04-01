@@ -325,6 +325,7 @@ function removeResetPswParam() {
   
     loadUserSessions();
   });
+  setInterval(loadUserSessions(), 30000);
 
   const messageEl = document.getElementById("message");
   
