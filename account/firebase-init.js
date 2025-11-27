@@ -1,11 +1,11 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyDN1E5nYSj0aJQ66EEFf8NGH3lkDy64Cf8",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "a1dos-creations-25.firebaseapp.com",
   projectId: "a1dos-creations-25",
-  storageBucket: "a1dos-creations-25.appspot.com",
+  storageBucket: "a1dos-creations-25.firebasestorage.app",
   messagingSenderId: "874801347017",
-  appId: "1:874801347017:web:34cfce97e3eee8479a9018",
-  measurementId: "G-7JBQ0CWX91"
+  appId: "1:874801347017:web:c8f4e6edf8ab39ba9a9018",
+  measurementId: "G-3FFDJMFQ3W"
 };
 
 // Initialize Firebase
