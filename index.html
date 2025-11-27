@@ -93,6 +93,131 @@
 </script>
 <body style="background-color: black;">
 
+      <div id="overlay">
+        <div class="popup">
+            <h2>⚠️ Services Suspended</h2>
+            <p><b>All services have been suspended due to a lack of funding.</b> <br> I'm very sad to announce that A1dos Creations, along with School Tools, have had their external services shut down due to a lack of funding. I hope to get A1dos Creations Services up and Running again soon, but for now, so long. <br></p>
+            <h2 id="api-status">API Status:</h2>
+            <p id="err">error</p>
+            <script>
+              function checkApiStatus() {
+                  fetch('https://api.a1dos-creations.com/health')
+                  .then(response => response.json())
+                  .then(data => {
+                      const statusEl = document.getElementById('api-status');
+                      const errorText = document.getElementById('err');
+                      if (data.status === "ok") {
+                        statusEl.textContent = "API Status: Online (last checked: " + new Date(data.timestamp).toLocaleTimeString() + ")";
+                        statusEl.style.color = "green";
+
+                        errorText.style.display = "none"
+                      } else {
+                        statusEl.textContent = "API Status: Down";
+                        statusEl.style.color = "red";
+                      }
+                  })
+                  .catch(err => {
+                      const statusEl = document.getElementById('api-status');
+                      const errorText = document.getElementById('err')
+                      statusEl.textContent = "API Status: Down";
+                      statusEl.style.color = "red";
+                      errorText.textContent = err;
+                      errorText.style.color = "red";
+                      console.error("Error fetching API status:", err);
+                  });
+              }
+              
+              checkApiStatus();
+              setInterval(checkApiStatus, 30000);
+            </script>
+            <br>
+            <a href="https://paypal.me/a1dos?country.x=US&locale.x=en_US" target="_blank" class="donate-button">Donate</a>
+        </div>
+    </div>
+
+    <style>
+            /* Overlay covers the whole screen */
+      #overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.85);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 9999;
+          animation: fadeIn 0.5s ease forwards;
+      }
+
+      /* Popup card */
+      .popup {
+          background-color: #1e1e1e;
+          padding: 30px 20px;
+          border-radius: 16px;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+          text-align: center;
+          max-width: 600px;
+          animation: slideUp 0.5s ease forwards;
+      }
+
+      /* Popup title */
+      .popup h2 {
+          margin-top: 0;
+          font-size: 24px;
+          color: #ff4d4f;
+          margin-bottom: 15px;
+      }
+
+      /* Popup text */
+      .popup p {
+          font-size: 16px;
+          margin-bottom: 25px;
+          line-height: 1.5;
+          color: #ccc;
+      }
+
+      /* Donate button */
+      .donate-button {
+          display: inline-block;
+          background-color: #ff4d4f;
+          color: white;
+          padding: 12px 25px;
+          font-size: 16px;
+          border-radius: 12px;
+          text-decoration: none;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 12px rgba(255, 77, 79, 0.4);
+      }
+
+      /* Button hover animation */
+      .donate-button:hover {
+          background-color: #e33b3f;
+          transform: translateY(-2px) scale(1.05);
+          box-shadow: 0 6px 16px rgba(227, 59, 63, 0.5);
+      }
+
+      /* Button click animation */
+      .donate-button:active {
+          transform: translateY(1px) scale(0.98);
+          box-shadow: 0 3px 8px rgba(227, 59, 63, 0.3);
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+      }
+
+      @keyframes slideUp {
+          0% { transform: translateY(50px); opacity: 0; }
+          100% { transform: translateY(0); opacity: 1; }
+      }
+    </style>
+
+    <script src="script.js"></script>
+
   <canvas id="starsCanvas"></canvas>
   <script src="deco.js"></script>
   <div class="typewriter hidden" style="margin-top: 90px;">
