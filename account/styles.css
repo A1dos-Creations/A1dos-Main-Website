@@ -1,517 +1,126 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca');
+/* styles.css */
+:root {
+    --background-color: #f4f6f8;
+    --card-background: #ffffff;
+    --text-color: #1c1c1e;
+    --accent-color: #007aff;
+    --accent-hover: #005ecb;
+    --error-color: #ff3b30;
+    --border-color: #e5e5e6;
+    --input-background: #f0f0f0;
+}
 
-#LoginH{
-    text-align: center;
-    font-size: 40px;
-    font-family: "Lexend Deca", sans-serif;
-    margin-top: 100px;
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #0d1117;
+        --card-background: #161b22;
+        --text-color: #f0f6fc;
+        --border-color: #30363d;
+        --input-background: #0d1117;
+    }
 }
-#RegisterH{
-    font-size: 40px;
-    font-family: "Lexend Deca", sans-serif;
-}
-input{
-    font-family: "Lexend Deca", sans-serif;
-    max-height: 25px;
-    min-height: 15px;
-    height: 20px;
-    width: 200px;
-    border-radius: 8px;
-    border-color: rgb(175, 175, 175);
-    border-style: solid;
-    -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s;
-}
-input:hover{
-    border-color: rgb(116, 116, 116);
-}
-#loginDiv{
+
+body {
+    font-family: 'Lexend Deca', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 750px;
-    align-items: center;
-    margin-left: auto;
-    margin-right: auto;
-}
-#registerDiv{
-    display: none;
-    flex-direction: column;
-    justify-self: center;
-    gap: 10px;
-    width: 750px;
-    align-items: center;
-    margin-left: auto;
-    margin-right: auto;
-}
-body{
-    align-items: center;
-    align-content: center;
     justify-content: center;
-}
-button{
-    font-family: "Lexend Deca", sans-serif;
-    height: 30px;
-    width: 100px;
-    outline: none;
-    border-color: rgb(168, 168, 168);
-    border-radius: 8px;
-    -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s;
-    border-style: solid;
-}
-button:hover{
-    background-color: #bbe0a9;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    overflow: hidden; /* Prevents scrollbars during animations */
 }
 
-#logout{
-    font-family: "Lexend Deca", sans-serif;
-    height: 30px;
-    width: 100px;
-    outline: none;
-    border-color: rgb(168, 168, 168);
-    border-style: solid;
-    border-radius: 8px;
-    -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s;
-    margin-top: 200px;
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    flex-direction:column-reverse;
-    font-size: 15px;
-    text-align: center;
-}
-#logout:hover{
-    background-color: #f0b7a4;
-    border-color: rgb(160, 62, 45);
-}
-
-#message{
-    font-family: "Lexend Deca", sans-serif;
-    font-size: 15px;
-    margin-top: 20px;
-    max-width: 200px;
-    justify-self: center;
-    position: absolute;
-    text-align: center;
-    padding: 15px;
-    background-color: #e1e3e7;
-    border-radius: 8px;
-    border-style: solid;
-    border-color: rgb(81, 87, 95);
-    display: none;
-    left: 0;
-    right: 0;
-}
-#shwRgstr{
-    font-family: Lexend Deca;
-    width: fit-content;
-    background-color: transparent;
-    border-style: none;
-    text-decoration: underline;
-    text-align: center;
-}
-
-/* ACCOUNT MANAGEMENT */
-.header1{
-    font-family: Lexend Deca;
-    color: white;
-    text-indent: 20px;
-    font-size: 45px;
-    font-weight: 900;
-    text-decoration: underline;
-}
-.header2{
-    font-family: Lexend Deca;
-    color: white;
-    text-indent: 50px;
-    font-size: 30px;
-    font-weight: 900;
-}
-.link{
-    font-family: Lexend Deca;
-    color: rgb(0, 0, 0);
-    width: 220px;
-    font-size: 16px;
-    margin-left: 30px;
-    -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s;
-    border-radius: 3px;
-}
-.link p{
-    margin-top: 1px;
-    margin-left: -30px;
-}
-#aboutHvr{
-    background-color: transparent;
-    color: white;
-    border-style: none;
-    width: 20px;
-    margin-bottom: 20px;
-    margin-top: -26px;
-    margin-left: 260px;
-    position: absolute;
-    text-align: center;
-    font-family: Lexend Deca;
-}
-#aboutHvr:hover{
-    background-color: transparent;
-    color: white;
-}
-#syncInfo{
-    font-family: Lexend Deca;
-    color: white;
-    font-size: 10px;
-    margin-top: 20px;
-    margin-left: 20px;
-    font-style: italic;
-}
-.icon{
-    height: 20px;
-    width: 20px;
-    margin-top: -35px;
-    margin-left: 75px;
-    position: absolute;
-}
-
-#about{
-    font-family: Lexend Deca;
-    color: white;
-    font-size: 17px;
-    margin-top: 20px;
-    margin-left: 20px;
-    width: 300px;
-    position: absolute;
-    margin-top: -45px;
-    margin-left: 290px;
-    background-color: #000000;
-    padding: 5px 15px;
-    border-style: none;
-    border-radius: 15px;
-    display: none;
-}
-#about p{
-    margin-top: 6px;
-}
-
-#google-status{
-    font-family: Lexend Deca;
-    color: white;
-    font-size: 18px;
-    margin-left: 30px;
-}
-
-#accountInfo{
-    font-family: Lexend Deca;
-    color: white;
-    font-size: 15px;
-    margin-left: 50px;
-    margin-bottom: 40px;
-}
-#infoIcon{
-    height: 19px;
-    width: auto;
-    margin-top: 10px;
-}
-.header3{
-    font-family: Lexend Deca;
-    color: white;
-    margin-top: -30px;
-    margin-left: 25px;
-}
-#parg10351781{
-    font-family: Lexend Deca;
-    color: white;
-    font-size: 13px;
-    margin-left: 40px;
-    margin-top: -20px;
-    opacity: 0.3;
-    font-style: italic;
-}
-#i51703n295b{
-    background-color: rgba(255, 239, 98, 0.219);
-    padding: 5px 15px;
-}
-#w75891g7{
-    background-color: rgba(255, 98, 98, 0.336);
-    padding: 5px 15px;
-}
-#av571v3{
-    border-style: solid;
-    border-color: white;
-    width: 600px;
-    margin-left: 50px;
-    margin-top: 25px;
-    margin-bottom: 25px;
-    border-radius: 5px;
-}
-#upgrd358725hg6{
-    font-family: Lexend Deca;
-    color: white;
-    border-style: solid;
-    width: 600px;
-    margin-left: 50px;
-    margin-top: 25px;
-    margin-bottom: 25px;
-    border-radius: 5px;
-}
-.upgrd89129p{
-    margin-left: 50px;
-}
-#donateInstead{
-    margin-left: 75px;
-    background-color: rgba(255, 217, 0, 0.938);
-    width: 140px;
-    margin-bottom: 30px;
-    margin-top: 15px;
-    height: 45px;
-    font-size: 18px;
-    box-shadow: 0px 0px 20px 15px rgba(255, 208, 0, 0.2);
-}
-#donateInstead:hover{
-    background-color: rgb(255, 217, 0);
-    color: rgb(0, 0, 0);
-    font-size: 20px;
-    height: 50px;
-    width: 160px;
-    box-shadow: 0px 0px 20px 15px rgba(255, 208, 0, 0.493);
-}
-#donateInstead{
-    margin-bottom: 30px;
-    margin-top: -11px;
-    height: 45px;
-    width: 140px;
-}
-#phoneNumber{
-    display: none;
-    position: absolute;
-    background-color: #0f0f0f;
-    padding: 30px 15px;
-    height: 350px;
-    width: 600px;
-    border-radius: 15px;
-    top: 35%;
-    box-shadow: 0px 0px 20px 15px rgba(0, 0, 0, 0.2);
-    right: 0;
-    left: 0;
-    justify-self: center;
-    bottom: 0;
-    justify-items: center;
-    text-align: center;
-}
-#sendCodeBtnP{
-    width: 170px;
-}
-#resetPswPopup{
-    display: none;
-    position: absolute;
-    background-color: #0f0f0f;
-    padding: 30px 15px;
-    height: 350px;
-    width: 600px;
-    border-radius: 15px;
-    top: 35%;
-    box-shadow: 0px 0px 20px 15px rgba(0, 0, 0, 0.2);
-    right: 0;
-    left: 0;
-    justify-self: center;
-    bottom: 0;
-    justify-items: center;
-    text-align: center;
-}
-#sendCodeBtn{
-    width: 170px;
-}
-#changePassword{
-    display: block;
-}
-#changePassword button{
-    width: 140px;
-}
-#pswAlert{
-    font-family: "Lexend Deca", sans-serif;
-    font-size: 15px;
-    margin-top: 20px;
-    max-width: 200px;
-    justify-self: center;
-    position: absolute;
-    text-align: center;
-    padding: 15px;
-    background-color: #f0b7a4;
-    border-radius: 8px;
-    border-style: solid;
-    display: none;
-    border-color: rgb(160, 62, 45);
-    left: 0;
-    right: 0;
-}
-#devicesListContainer{
-    justify-self: center;
-    background-color: rgb(184, 184, 184);
-    padding: 10px 20px;
-    font-family: Lexend Deca;
-    color: rgb(37, 37, 37);
-    margin-top: -500px;
-    margin-left: auto;
-    width: 600px;
-    margin-right: 50px;
-    border-radius: 8px;
-}
-#devicesListContainer p{
-    font-size: 20px;
-    margin-top: 10px;
-}
-#deviceList {
-    max-width: 600px;
-    min-width: 250px;
-    width: auto;
-    max-height: 600px;
-    min-height: 300px;
-    height: auto;
-}
-
-
-#hm7235897g7{
-    font-family: Lexend Deca;
-    color: white;
-    font-size: 22px;
-    margin-left: 50px;
-    margin-top: 20px;
-    background-color: transparent;
-    border-style: solid;
-    border-color: white;
-    width: 80px;
-    height: 40px;
-    margin-top: -0px;
-    margin-bottom: 10px;
-    margin-left: -0px;
-}
-#hm7235897g7:hover{
-    color: rgb(216, 216, 216);
-    font-size: 25px;
-    height: 50px;
-    width: 90px;
-    background-color: rgba(167, 167, 167, 0.219);
-}
-
-#logout-btn{
-    font-family: Lexend Deca;
-    color: white;
-    font-size: 15px;
-    margin-left: 50px;
-    margin-top: 20px;
-    background-color: rgba(180, 58, 27, 0.548);
-    border-style: none;
-    margin-top: -0px;
-    margin-bottom: 10px;
-    margin-left: 25px;
-    text-decoration: underline;
-    width: 80px;
-}
-#logout-btn:hover{
-    background-color: rgb(187, 67, 51);
-    color: rgb(216, 216, 216);
-    font-size: 18px;
-    width: 90px;
-    height: 35px;
-}
-
-.notification-settings{
-    font-family: Lexend Deca;
-    color: white;
-    margin-left: 50px;
-    margin-top: 20px;
-    border-style: solid;
-    margin-top: -0px;
-    margin-bottom: 10px;
-    margin-left: 25px;
-    width: 80px;
-    padding: 0px 30px;
-    border-color: white;
-    justify-content: center;
-    margin-top: 20px;
-    margin-left: 50px;
-    border-radius: 8px;
-    width: max-content;
-    height: 125px;
-}
-.notification-settings p{
-    margin-top: 5px;
-    font-size: 30px;
-    font-weight: bolder;
-}
-
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-}
-.switch input { 
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 34px;
-}
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-}
-input:checked + .slider {
-    background-color: #66bb6a;
-}
-input:checked + .slider:before {
-    transform: translateX(26px);
-}
-
-/* PAYMENT PAGES */
-#bt150-4g{
-    width: 150px;
-    background-color: rgb(0, 68, 255);
-    color: white;
-    border-style: none;
-    height: 50px;
-    font-size: 16px;
-}
-#bt150-4g:hover{
-    background-color: rgb(51, 51, 51);
-    color: rgb(228, 228, 228);
-    font-size: 18px;
-    height: 60px;
-    width: 160px;
-}
-
-/* UPDATES PAGE */
-.para1{
-    font-family: Lexend Deca;
-    color: white;
-    text-wrap-style: pretty;
-    margin-left: 25px;
-    text-indent: 20px;
-}
-canvas{
-    position: absolute;
-    top: 0;
-    left: 0;
+.auth-container {
+    background-color: var(--card-background);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px
+ 30px rgba(0, 0, 0, 0.12);
     width: 100%;
-    height: 100%;
-    pointer-events: none; /* Don't interfere with page interaction */
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden; /* Crucial for the sliding animation */
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 24px;
+    font-size: 1.8em;
+    font-weight: 500;
+}
+
+.form-wrapper {
+    position: relative;
+    transition: height 0.4s ease-in-out; /* Animates the height change */
+}
+
+.form-section {
+    width: 100%;
+    opacity: 1;
+    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; /* Animates the fade and slide */
+}
+
+.form-section.hidden {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transform: translateX(100%); /* Hides the form by moving it to the right */
+    pointer-events: none; /* Prevents interaction with the hidden form */
+}
+
+.form-section.hidden.left {
+    transform: translateX(-100%); /* Hides the form by moving it to the left */
+}
+
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--input-background);
+    color: var(--text-color);
+    font-size: 1em;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.primary-btn {
+    background-color: var(--accent-color);
+    color: white;
+    margin-bottom: 12px;
+}
+
+.primary-btn:hover {
+    background-color: var(--accent-hover);
+}
+
+.secondary-btn {
+    background: none;
+    color: var(--accent-color);
+    border: 1px solid var(--border-color);
+}
+
+#message {
+    min-height: 20px;
+    margin-bottom: 20px;
+    font-weight: 500;
 }

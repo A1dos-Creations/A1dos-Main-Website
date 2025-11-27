@@ -4,46 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login / Register</title>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./styles.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;500&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/AuthFaviconLight.png" id="favicon">
 </head>
-
-<script>
-    function updateFavicon() {
-    const favicon = document.getElementById("favicon");
-    const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    favicon.href = isDarkMode ? "AuthFaviconDark.png" : "AuthFaviconLight.png";
-}
-updateFavicon();
-window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", updateFavicon);
-</script>
-
 <body>
-    <p id="message"></p>
+    <div class="auth-container">
+        <h2 id="form-title">Login</h2>
+        <p id="message"></p>
 
-    <h2 id="LoginH">Login</h2>
-    <div id="loginDiv">
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="loginUser()">Login</button>
+        <div id="form-wrapper">
+            <div id="login-form" class="form-section">
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button id="login-button" class="primary-btn">Login</button>
+            </div>
+
+            <div id="register-form" class="form-section hidden">
+                <input type="text" id="name" placeholder="Name" required>
+                <input type="email" id="register-email" placeholder="Email" required>
+                <input type="password" id="register-password" placeholder="Password" required>
+                <button id="register-button" class="primary-btn">Register</button>
+            </div>
+        </div>
+
+        <button id="toggle-form-btn" class="secondary-btn">Don't have an account? Register one.</button>
     </div>
-    <br>
-    <br>
-    <br>
-    <button id="shwRgstr">Don't have an account? Register one.</button>
-    <br>
-    <br>
-    <br>
-    <div id="registerDiv">
-        <h2 id="RegisterH">Register</h2>
-        <input type="text" id="name" placeholder="Name">
-        <input type="email" id="reg-email" placeholder="Email">
-        <input type="password" id="reg-password" placeholder="Password">
-        <button onclick="registerUser()">Register</button>
-    </div>
 
-    <button onclick="logoutUser()" id="logout">Logout</button>
-
-    <script src="auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-functions-compat.js"></script>
+    
+    <script src="./firebase-init.js"></script>
+    <script src="./auth.js"></script>
 </body>
 </html>
