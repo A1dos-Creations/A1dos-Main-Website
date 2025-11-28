@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             // Use the Firebase SDK to call your function
-            const functions = firebase.functions();
+            const functions = firebase.app().functions("us-central1");
             const createTokenFunction = functions.httpsCallable('createCustomAuthToken');
 
             const result = await createTokenFunction({ email, password, name, isRegistering });
