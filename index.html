@@ -93,48 +93,6 @@
 </script>
 <body style="background-color: black;">
 
-      <div id="overlay">
-        <div class="popup">
-            <h2>⚠️ Services Suspended</h2>
-            <p><b>All services have been suspended due to a lack of funding.</b> <br> I'm very sad to announce that A1dos Creations, along with School Tools, have had their external services shut down due to a lack of funding. I hope to get A1dos Creations Services up and Running again soon, but for now, so long. <br></p>
-            <h2 id="api-status">API Status:</h2>
-            <p id="err">error</p>
-            <script>
-              function checkApiStatus() {
-                  fetch('https://api.a1dos-creations.com/health')
-                  .then(response => response.json())
-                  .then(data => {
-                      const statusEl = document.getElementById('api-status');
-                      const errorText = document.getElementById('err');
-                      if (data.status === "ok") {
-                        statusEl.textContent = "API Status: Online (last checked: " + new Date(data.timestamp).toLocaleTimeString() + ")";
-                        statusEl.style.color = "green";
-
-                        errorText.style.display = "none"
-                      } else {
-                        statusEl.textContent = "API Status: Down";
-                        statusEl.style.color = "red";
-                      }
-                  })
-                  .catch(err => {
-                      const statusEl = document.getElementById('api-status');
-                      const errorText = document.getElementById('err')
-                      statusEl.textContent = "API Status: Down";
-                      statusEl.style.color = "red";
-                      errorText.textContent = err;
-                      errorText.style.color = "red";
-                      console.error("Error fetching API status:", err);
-                  });
-              }
-              
-              checkApiStatus();
-              setInterval(checkApiStatus, 30000);
-            </script>
-            <br>
-            <a href="https://paypal.me/a1dos?country.x=US&locale.x=en_US" target="_blank" class="donate-button">Donate</a>
-        </div>
-    </div>
-
     <style>
             /* Overlay covers the whole screen */
       #overlay {
