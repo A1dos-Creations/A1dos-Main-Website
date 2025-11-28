@@ -8,11 +8,4 @@ const firebaseConfig = {
   measurementId: "G-3FFDJMFQ3W"
 };
 
-// Initialize Firebase
-try {
-  if (typeof firebase !== 'undefined') {
-    firebase.initializeApp(firebaseConfig);
-  }
-} catch (e) {
-  console.error("Firebase initialization error:", e);
-}
+firebase.initializeApp(firebaseConfig);
