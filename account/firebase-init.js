@@ -1,5 +1,5 @@
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  apiKey: "AIzaSyDU-CL3fa_ONT8xkqN7nRf-QyZq4t8KvE0",
   authDomain: "a1dos-creations-25.firebaseapp.com",
   projectId: "a1dos-creations-25",
   storageBucket: "a1dos-creations-25.firebasestorage.app",
